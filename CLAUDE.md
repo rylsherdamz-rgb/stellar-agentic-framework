@@ -8,7 +8,7 @@ At the start of every session, immediately load every skill into context:
 
 ```block
 SKILL_BOOT:
-  for each name in [smart-contracts, dapp, data, assets, agentic-payments, standards, zk-proofs, graphify]:
+  for each name in [smart-contracts, dapp, data, assets, agentic-payments, standards, zk-proofs, stellar-mcp, graphify]:
     path = ~/.claude/skills/{name}/SKILL.md
     if path exists:
       read path and keep its contents in context for the session
@@ -28,6 +28,7 @@ Every skill listed below must be in context before handling any user request. If
 - `agentic-payments` — x402, MPP Charge/Channel
 - `standards` — SEPs, CAPs, ecosystem references
 - `zk-proofs` — Zero-knowledge proofs, Groth16
+- `stellar-mcp` — MCP tools (Stellar RPC, filesystem, GitHub, Playwright)
 - `graphify` — Knowledge graph for every project
 
 ## Agent Registry

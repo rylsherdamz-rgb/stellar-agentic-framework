@@ -13,7 +13,7 @@ const SKILLS_DIR = join(PKG_ROOT, "skills");
 const REQUIRED_SKILLS = [
   "smart-contracts", "dapp", "data", "assets",
   "agentic-payments", "standards", "zk-proofs",
-  "graphify",
+  "stellar-mcp", "graphify",
 ];
 
 const IS_TTY = process.stdout.isTTY;
