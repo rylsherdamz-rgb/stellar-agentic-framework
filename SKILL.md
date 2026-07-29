@@ -14,7 +14,7 @@ tags:
   - x402
   - mpp
   - stellar-wallets-kit
-homepage: https://github.com/richie/stellar-agentic-framework
+homepage: https://github.com/rylsherdamz-rgb/stellar-agentic-framework
 user-invocable: true
 argument-hint: "[project name or 'scaffold' to create a new project]"
 ---

@@ -1,0 +1,117 @@
+{
+  "name": "stellar-agentic-framework",
+  "version": "0.1.0",
+  "description": "Eval-driven agentic harness for building production Stellar dApps with 6 specialist agents, structured evals, knowledge graphs, and npx scaffolding",
+  "license": "MIT",
+  "homepage": "https://github.com/rylsherdamz-rgb/stellar-agentic-framework",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rylsherdamz-rgb/stellar-agentic-framework"
+  },
+  "author": {
+    "name": "Stellar Agentic Framework",
+    "url": "https://github.com/rylsherdamz-rgb/stellar-agentic-framework"
+  },
+  "tags": [
+    "stellar",
+    "soroban",
+    "smart-contracts",
+    "dapp",
+    "agentic-os",
+    "eval-driven",
+    "x402",
+    "mpp",
+    "stellar-wallets-kit"
+  ],
+  "categories": ["blockchain", "development", "smart-contracts", "frontend", "backend"],
+  "skills": [
+    {
+      "name": "stellar-agentic-orchestrator",
+      "path": "SKILL.md",
+      "description": "Main orchestration skill that loads 9 Stellar skills, routes tasks to 6 specialist agents, and verifies output with structured evals",
+      "agents": ["claude-code", "opencode"]
+    },
+    {
+      "name": "stellar-contracts-agent",
+      "path": "agents/stellar-contracts.md",
+      "description": "Specialist agent for Rust/soroban-sdk smart contract development",
+      "agents": ["claude-code", "opencode"]
+    },
+    {
+      "name": "stellar-frontend-agent",
+      "path": "agents/stellar-frontend.md",
+      "description": "Specialist agent for Next.js dApp with Stellar Wallets Kit integration",
+      "agents": ["claude-code", "opencode"]
+    },
+    {
+      "name": "stellar-backend-agent",
+      "path": "agents/stellar-backend.md",
+      "description": "Specialist agent for Express API servers with x402/MPP payment flows",
+      "agents": ["claude-code", "opencode"]
+    },
+    {
+      "name": "stellar-payments-agent",
+      "path": "agents/stellar-payments.md",
+      "description": "Specialist agent for x402 and MPP Charge/Channel payment configuration",
+      "agents": ["claude-code", "opencode"]
+    },
+    {
+      "name": "stellar-ops-agent",
+      "path": "agents/stellar-ops.md",
+      "description": "Specialist agent for CI/CD, deployment, and DevOps workflows",
+      "agents": ["claude-code", "opencode"]
+    },
+    {
+      "name": "stellar-zk-agent",
+      "path": "agents/stellar-zk.md",
+      "description": "Specialist agent for zero-knowledge proof integration on Stellar",
+      "agents": ["claude-code", "opencode"]
+    }
+  ],
+  "commands": [
+    {
+      "name": "scaffold",
+      "path": ".claude/commands/scaffold.md",
+      "description": "Create a new Stellar dApp project from templates"
+    },
+    {
+      "name": "deploy",
+      "path": ".claude/commands/deploy.md",
+      "description": "Deploy contracts and apps to Stellar testnet/mainnet"
+    },
+    {
+      "name": "test-e2e",
+      "path": ".claude/commands/test-e2e.md",
+      "description": "Run end-to-end tests with Stellar Agentic Kit"
+    },
+    {
+      "name": "graphify",
+      "path": ".claude/commands/graphify.md",
+      "description": "Build and query a knowledge graph of the project"
+    }
+  ],
+  "evals": [
+    { "name": "contract-eval", "path": "evals/01-contract-eval.md" },
+    { "name": "frontend-eval", "path": "evals/02-frontend-eval.md" },
+    { "name": "backend-eval", "path": "evals/03-backend-eval.md" },
+    { "name": "e2e-eval", "path": "evals/04-e2e-eval.md" },
+    { "name": "framework-self-test", "path": "evals/05-framework-eval.md" }
+  ],
+  "agentConfig": {
+    "claude-code": {
+      "skillDir": ".claude/skills",
+      "commandDir": ".claude/commands",
+      "agentDir": "agents"
+    },
+    "opencode": {
+      "skillDir": ".opencode/skills",
+      "commandDir": ".opencode/commands",
+      "agentDir": "agents"
+    }
+  },
+  "requires": ["git", "node >=20", "cargo (for contracts)"],
+  "publishConfig": {
+    "immutable": false,
+    "access": "public"
+  }
+}

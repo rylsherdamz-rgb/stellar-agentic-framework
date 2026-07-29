@@ -19,12 +19,16 @@
     "mpp",
     "smart-contracts",
     "dapp",
-    "scaffold"
+    "scaffold",
+    "agent-skill",
+    "claude-code",
+    "opencode",
+    "create-stellar-app"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/richie/stellar-agentic-framework"
+    "url": "https://github.com/rylsherdamz-rgb/stellar-agentic-framework"
   },
   "publishConfig": {
     "access": "public"

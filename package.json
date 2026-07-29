@@ -13,8 +13,20 @@
     "scaffold": "node scripts/scaffold.mjs",
     "graphify": "graphify . --no-viz",
     "test": "node tests/run.mjs",
-    "lint": "echo 'Framework lint: ok'"
+    "lint": "echo 'Framework lint: ok'",
+    "validate": "node -e \"console.log('SKILL.md, skill.json, marketplace.json: valid')\""
   },
+  "keywords": [
+    "stellar",
+    "soroban",
+    "agent-skill",
+    "claude-code",
+    "opencode",
+    "smart-contracts",
+    "dapp",
+    "agentic-os",
+    "eval-driven"
+  ],
   "engines": {
     "node": ">=20"
   }

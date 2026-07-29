@@ -132,4 +132,4 @@ Result: X/Y passed (pass@1: X%)
 
 ---
 
-Built with the [Stellar Agentic Framework](https://github.com/richie/stelllar-agentic-framework).
+Built with the [Stellar Agentic Framework](https://github.com/rylsherdamz-rgb/stellar-agentic-framework).

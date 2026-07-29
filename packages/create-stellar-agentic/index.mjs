@@ -187,7 +187,7 @@ Examples:
   const projectName = basename(resolved);
   writeFileSync(join(resolved, "README.md"), `# ${projectName}
 
-Scaffolded with [create-stellar-agentic](https://github.com/richie/stellar-agentic-framework).
+Scaffolded with [create-stellar-agentic](https://github.com/rylsherdamz-rgb/stellar-agentic-framework).
 
 ## Quick Start
 
@@ -212,7 +212,7 @@ ${types.includes("contracts") ? "- **contracts/** — Rust smart contracts (soro
 
 ## Stellar Agentic Framework
 
-This project uses the [Stellar Agentic Framework](https://github.com/richie/stellar-agentic-framework) — an eval-driven, multi-agent harness for building production Stellar dApps.
+This project uses the [Stellar Agentic Framework](https://github.com/rylsherdamz-rgb/stellar-agentic-framework) — an eval-driven, multi-agent harness for building production Stellar dApps.
 `);
 
   console.log("");

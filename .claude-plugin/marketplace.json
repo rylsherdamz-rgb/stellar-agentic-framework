@@ -3,7 +3,7 @@
   "description": "Eval-driven multi-agent framework for building production Stellar dApps",
   "owner": {
     "name": "Stellar Agentic Framework",
-    "url": "https://github.com/richie/stellar-agentic-framework"
+    "url": "https://github.com/rylsherdamz-rgb/stellar-agentic-framework"
   },
   "plugins": [
     {
@@ -11,7 +11,7 @@
       "description": "Orchestration layer that routes tasks to 6 specialist agents and verifies output with structured evals",
       "source": {
         "source": "github",
-        "repo": "richie/stellar-agentic-framework",
+        "repo": "rylsherdamz-rgb/stellar-agentic-framework",
         "ref": "main"
       },
       "skills": ["."],
