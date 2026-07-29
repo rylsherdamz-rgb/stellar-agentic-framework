@@ -90,15 +90,37 @@ function copyFrameworkSkill(targetDir) {
     "# Data Directory\n\nPersistent file-based memory for the Stellar Agentic OS.\n");
 }
 
-function scaffoldTemplates(targetDir, types) {
+async function scaffoldTemplates(targetDir, types, skipPrompts) {
   if (types.includes("contracts") || types.includes("full")) {
     copyDir(join(TEMPLATES_DIR, "contracts"), join(targetDir, "contracts"));
     console.log("  ✓ contracts/");
   }
   if (types.includes("frontend") || types.includes("full")) {
-    const dst = join(targetDir, "frontend");
-    copyDir(join(TEMPLATES_DIR, "frontend"), dst, (p) => !p.endsWith("package-lock.json"));
-    console.log("  ✓ frontend/");
+    const frontendDir = join(targetDir, "frontend");
+    const nextArgs = [
+      "create-next-app@latest", frontendDir,
+      "--ts", "--src-dir", "--app",
+      "--use-npm",
+      "--eslint",
+      "--no-tailwind",
+      "--import-alias", "@/*",
+    ];
+    if (skipPrompts) nextArgs.push("--yes");
+    console.log("  Initializing Next.js with create-next-app...");
+    try {
+      const { execSync } = await import("child_process");
+      execSync(`npx ${nextArgs.join(" ")}`, { stdio: "inherit", timeout: 120000 });
+    } catch {
+      console.log("  ⚠ create-next-app failed — falling back to template copy");
+      copyDir(join(TEMPLATES_DIR, "frontend"), frontendDir, (p) => !p.endsWith("package-lock.json"));
+    }
+    // Overlay agentic kit hooks, components, providers, lib
+    copyDir(join(TEMPLATES_DIR, "frontend/hooks"), join(frontendDir, "src/hooks"));
+    copyDir(join(TEMPLATES_DIR, "frontend/components"), join(frontendDir, "src/components"));
+    copyDir(join(TEMPLATES_DIR, "frontend/providers"), join(frontendDir, "src/providers"));
+    copyDir(join(TEMPLATES_DIR, "frontend/lib"), join(frontendDir, "src/lib"));
+    copyDir(join(TEMPLATES_DIR, "frontend/examples"), join(frontendDir, "src/examples"));
+    console.log("  ✓ frontend/ (agentic kit overlay applied)");
   }
   if (types.includes("backend") || types.includes("full")) {
     const dst = join(targetDir, "backend");
@@ -125,7 +147,7 @@ Usage:
 
 Options:
   --skill-only     Install only the Agentic OS skill files into an existing project
-  --template <t>   Scaffold type: full (default), contract-only, frontend-only, backend-only, payment-only
+  --template <t>   Scaffold type: full (default), contract-only, frontend-only (uses create-next-app), backend-only, payment-only
   --no-install     Skip npm install step
   --yes, -y        Skip all prompts
 
@@ -212,7 +234,19 @@ Examples:
     : tmplType === "payment-only" ? ["backend"]
     : ["contracts", "frontend", "backend", "cicd"];
 
-  scaffoldTemplates(resolved, types);
+  await scaffoldTemplates(resolved, types, skipPrompts);
+
+  // Install Stellar dependencies for frontend (create-next-app doesn't include them)
+  if (types.includes("frontend") || types.includes("full")) {
+    const frontendDir = join(resolved, "frontend");
+    if (existsSync(join(frontendDir, "package.json")) && !noInstall) {
+      try {
+        const { execSync } = await import("child_process");
+        console.log("  Installing Stellar packages in frontend/...");
+        execSync("npm install @stellar/stellar-sdk@^12.0.0 @creit.tech/stellar-wallets-kit@^1.0.0 @stellar/freighter-api@^2.0.0", { cwd: frontendDir, stdio: "inherit", timeout: 120000 });
+      } catch {}
+    }
+  }
 
   // Install dependency skills (smart-contracts, graphify, etc.)
   if (!noInstall) {
@@ -228,13 +262,7 @@ Scaffolded with [create-stellar-agentic](https://github.com/rylsherdamz-rgb/stel
 ## Quick Start
 
 \`\`\`bash
-# Install dependencies
-npm install
-
-# Build contracts
-cd contracts && cargo build --release --target wasm32v1-none
-
-# Start frontend
+# Install dependencies (frontend deps installed by create-next-app + Stellar packages)
 cd frontend && npm run dev
 
 # Start backend
@@ -251,18 +279,9 @@ ${types.includes("contracts") ? "- **contracts/** — Rust smart contracts (soro
 This project uses the [Stellar Agentic Framework](https://github.com/rylsherdamz-rgb/stellar-agentic-framework) — an eval-driven, multi-agent harness for building production Stellar dApps.
 `);
 
-  console.log("");
   console.log(`  ✦ ${projectName} created! ✦`);
   console.log("");
   console.log(`  cd ${targetDir}`);
-
-  if (!noInstall && types.includes("frontend")) {
-    try {
-      console.log("  npm install...");
-      const { execSync } = await import("child_process");
-      execSync("npm install", { cwd: resolved, stdio: "inherit" });
-    } catch {}
-  }
 
   console.log("");
   console.log("  Next steps:");
