@@ -16,7 +16,7 @@
 # Install the skill for Claude Code
 npx skills add rylsherdamz-rgb/stellar-agentic-framework --agent claude-code
 
-# Or scaffold a full project
+# Or scaffold a full project (uses create-next-app for the frontend)
 npx create-stellar-agentic my-dapp --yes
 ```
 
@@ -59,6 +59,12 @@ The harness routes your request to the right agents, builds everything, verifies
 npx create-stellar-agentic my-stellar-dapp --yes
 cd my-stellar-dapp
 npm install
+```
+
+Or once published to npm:
+```bash
+npm install -g create-stellar-agentic
+create-stellar-agentic my-dapp --yes
 ```
 
 This scaffolds a complete project with:
@@ -137,11 +143,12 @@ cd stellar-agentic-framework
 npx skills add ./ --agent claude-code
 ```
 
-### Method 3: npm Global (CLI only)
+### Method 3: npm Global (CLI only, once published)
 
 ```bash
 npm install -g create-stellar-agentic
-stellar-agentic my-dapp --yes
+create-stellar-agentic my-dapp --yes
+# or: stellar-agentic my-dapp --yes
 ```
 
 ### Method 4: Skill-Only (no templates, just the skill)

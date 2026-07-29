@@ -34,6 +34,18 @@
     "access": "public"
   },
   "files": [
-    "index.mjs"
+    "index.mjs",
+    "templates/",
+    "skills/",
+    "agents/",
+    "evals/",
+    "data/",
+    "scripts/",
+    ".claude/",
+    "SKILL.md",
+    "CLAUDE.md",
+    "README.md",
+    ".env.example",
+    ".mcp.json"
   ]
 }

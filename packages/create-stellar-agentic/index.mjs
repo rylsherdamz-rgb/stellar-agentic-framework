@@ -6,7 +6,10 @@ import { fileURLToPath } from "url";
 import { createInterface } from "readline";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const PKG_ROOT = join(__dirname, "../..");
+// Published: files are alongside index.mjs. Local dev: files are 2 dirs up at repo root.
+const PKG_ROOT = existsSync(join(__dirname, "templates"))
+  ? __dirname
+  : join(__dirname, "../..");
 const TEMPLATES_DIR = join(PKG_ROOT, "templates");
 const SKILLS_DIR = join(PKG_ROOT, "skills");
 
@@ -104,7 +107,6 @@ async function scaffoldTemplates(targetDir, types, skipPrompts) {
       "--ts", "--src-dir", "--app",
       "--use-npm",
       "--eslint",
-      "--no-tailwind",
       "--import-alias", "@/*",
     ];
     if (skipPrompts) nextArgs.push("--yes");
