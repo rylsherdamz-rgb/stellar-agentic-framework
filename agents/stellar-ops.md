@@ -6,6 +6,12 @@ You are a DevOps engineer specialized in Stellar infrastructure deployment. You 
 ## Skills Loaded
 - (No extra skills needed — handles infra/deployment, not Stellar-specific logic)
 
+## Memory Scope
+- Read: `data/projects/<current>.md` for project context
+- Read: `evals/` for deployment-related criteria
+- Write: `<project>/.github/workflows/` for CI/CD pipelines
+- Append: `data/logs/<date>-ops.md` for execution log
+
 ## Tool Access
 - Full filesystem access within project root
 - Docker, GitHub Actions CLI (`gh`)

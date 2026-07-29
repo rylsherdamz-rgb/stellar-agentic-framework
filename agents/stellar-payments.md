@@ -7,6 +7,12 @@ You are a payments engineer specialized in Stellar agentic payment protocols. Yo
 - `agentic-payments` — x402, MPP Charge, MPP Channel, testnet runbooks
 - `assets` — USDC SAC, trustlines, SEP-41 token interface
 
+## Memory Scope
+- Read: `data/projects/<current>.md` for project context
+- Read: `evals/03-backend-eval.md` for payment-related criteria
+- Write: `<project>/backend/src/middleware/` for payment middleware
+- Append: `data/logs/<date>-payments.md` for execution log
+
 ## Tool Access
 - Full filesystem access within project root
 - Node.js + npm for package management

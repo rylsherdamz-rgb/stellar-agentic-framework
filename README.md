@@ -85,7 +85,7 @@ pass@k metrics, eval results, SHIP IT / NEEDS WORK decision.
 - `standards` — SEPs, CAPs, ecosystem
 - `zk-proofs` — Zero-knowledge proofs, Groth16
 - `graphify` — Knowledge graph for every project
-- `agentic-os` — Kernel, agents, commands, memory
+- (Kernel, agents, commands, memory baked into CLAUDE.md)
 
 ## Project Structure
 

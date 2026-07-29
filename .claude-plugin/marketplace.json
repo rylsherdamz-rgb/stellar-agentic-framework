@@ -34,5 +34,5 @@
     "pluginRoot": "."
   },
   "categories": ["blockchain", "development", "smart-contracts"],
-  "tags": ["stellar", "soroban", "dapp", "agentic-os", "eval-driven"]
+  "tags": ["stellar", "soroban", "dapp", "eval-driven"]
 }

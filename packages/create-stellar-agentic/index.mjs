@@ -8,6 +8,13 @@ import { createInterface } from "readline";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PKG_ROOT = join(__dirname, "../..");
 const TEMPLATES_DIR = join(PKG_ROOT, "templates");
+const SKILLS_DIR = join(PKG_ROOT, "skills");
+
+const REQUIRED_SKILLS = [
+  "smart-contracts", "dapp", "data", "assets",
+  "agentic-payments", "standards", "zk-proofs",
+  "graphify",
+];
 
 const IS_TTY = process.stdout.isTTY;
 
@@ -16,6 +23,29 @@ function ask(query) {
     const rl = createInterface({ input: process.stdin, output: process.stdout });
     rl.question(query, (answer) => { rl.close(); resolve(answer.trim()); });
   });
+}
+
+async function installDependencySkills() {
+  const homeDir = process.env.HOME || process.env.USERPROFILE;
+  if (!homeDir) { console.log("  ⚠ Cannot determine home dir — skipping skill install"); return; }
+  const skillBase = join(homeDir, ".claude", "skills");
+  const missing = REQUIRED_SKILLS.filter((s) => !existsSync(join(skillBase, s, "SKILL.md")));
+  if (missing.length === 0) {
+    console.log("  ✓ All 9 dependency skills already installed");
+    return;
+  }
+  console.log(`  Installing ${missing.length} missing skills...`);
+  for (const name of missing) {
+    const src = join(SKILLS_DIR, name);
+    if (!existsSync(join(src, "SKILL.md"))) {
+      console.log(`  ⚠ ${name} skill not found in framework — skipping`);
+      continue;
+    }
+    const dest = join(skillBase, name);
+    mkdirSync(dest, { recursive: true });
+    copyDir(src, dest);
+  }
+  console.log(`  ✓ Installed ${missing.length} dependency skills to ~/.claude/skills/`);
 }
 
 function copyDir(src, dest, filter = () => true) {
@@ -150,6 +180,7 @@ Examples:
     console.log("  ✓ .claude/commands/");
     console.log("  ✓ evals/");
     console.log("  ✓ data/");
+    await installDependencySkills();
     console.log("\n  Done! The Stellar Agentic Framework is ready in this project.");
     console.log("  Run /scaffold to generate your first template, or use the agents directly.");
     console.log("");
@@ -182,6 +213,11 @@ Examples:
     : ["contracts", "frontend", "backend", "cicd"];
 
   scaffoldTemplates(resolved, types);
+
+  // Install dependency skills (smart-contracts, graphify, etc.)
+  if (!noInstall) {
+    await installDependencySkills();
+  }
 
   // Write project README
   const projectName = basename(resolved);
