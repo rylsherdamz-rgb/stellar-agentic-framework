@@ -87,6 +87,10 @@ const { address, sign, data, getBalances } = useWallet();
 | Hook source | `hooks/use-contract.ts` | `read()` (simulation), `write()` (sign+submit) |
 | Hook source | `hooks/use-stellar-wallet.ts` | `connect`, `disconnect`, `sign`, `getBalances` |
 | Provider | `providers/wallet-provider.tsx` | React context + `useWallet()` export |
+| Components | `components/connect-button.tsx` | Connect + disconnect + XLM balance badge |
+| Components | `components/invoke-contract.tsx` | Read/write any contract method from UI |
+| Components | `components/send-payment.tsx` | Send XLM with balance refresh after send |
+| Config | `lib/stellar-config.ts` | RPC config, network config, helper ScVal functions |
 | Examples | `examples/use-stellar-data-example.tsx` | BalanceViewer, ContractReader, EventList, UsdcBalance, XlmBalanceBadge |
 | Examples | `examples/dashboard-page.tsx` | Full dashboard layout with ConnectButton + InvokeContract |
 

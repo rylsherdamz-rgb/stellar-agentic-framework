@@ -1,14 +1,21 @@
 ---
 name: smart-contracts
 description: "Stellar smart contract development (Rust, soroban-sdk). Entry point with project setup, contract anatomy, and build/deploy workflow."
-version: 0.1.0
+version: 0.2.0
 ---
 
 # Smart Contracts (Soroban)
 
-Required by the Stellar Agentic Framework. Install from the agent-ecosystem or ECC skill bundle.
+## Source Files (published with this skill)
 
-- Rust soroban-sdk contract development
-- Storage/TTL management, authorization, cross-contract calls
-- Unit, fuzz, property, fork, mutation, and integration testing
-- Vulnerability classes, checklists, tooling, audits
+| File | Contents |
+|------|----------|
+| `contracts/hello-world/src/lib.rs` | Minimal contract — `__check_auth`, `hello`, `try_at` |
+| `contracts/hello-world/src/test.rs` | Unit test for hello-world |
+| `contracts/token/src/lib.rs` | SEP-41 token (name, symbol, decimals, balance_of, transfer, mint, burn) |
+| `contracts/token/src/test.rs` | Token unit tests |
+
+## Patterns
+
+- `contracts/hello-world/` — minimal scaffold for new contracts (start here)
+- `contracts/token/` — full SEP-41 token implementation (reference for storage, auth, events)

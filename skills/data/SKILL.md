@@ -6,7 +6,14 @@ version: 0.2.0
 
 # Data — Stellar Chain Queries
 
-All blockchain queries in the Stellar Agentic Framework go through `useStellarData()` (frontend) or directly through the Stellar SDK / RPC (backend). Never write raw curl or manual RPC calls.
+All blockchain queries use `useStellarData()` (frontend) or Stellar SDK / RPC directly (backend). Never raw curl or manual RPC calls.
+
+## Source Files (published with this skill)
+
+| File | Contents |
+|------|----------|
+| `templates/src/index.ts` | Express server — balance endpoint, contract query endpoint, CORS |
+| `templates/src/services/stellar.ts` | RPC client — `getBalances`, `queryContract`, `getContractData`, `getEvents`, `getTransaction` |
 
 ## Agentic Kit (Frontend)
 
@@ -43,7 +50,7 @@ const events = await rpc.getEvents({ contractIds: [contractId] });
 - `rpc.getLatestLedger()` — current ledger seq
 - Horizon: `GET /accounts/{id}`, `GET /claimable_balances`, `GET /payments`
 
-## Agentic Kit Pattern Rules
+## Strict Rules
 1. Frontend: always use `useStellarData()` — never raw RPC or curl
 2. Read-only contract state: use `useContract().read()` (simulation, no tx)
 3. State-changing contract calls: use `useContract().write()` (sign + submit)
