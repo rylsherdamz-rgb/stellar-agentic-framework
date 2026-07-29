@@ -13,8 +13,8 @@
 **Build production Stellar dApps in minutes.** An eval-driven, multi-agent coding harness that routes your request to 6 parallel specialist agents, verifies every output against structured evals, steers on failure, and produces a ship-ready eval report. Includes Stellar Agentic Kit hooks for blockchain queries and MCP integrations for chain-level debugging.
 
 ```bash
-# Install the skill
-npx skills add rylsherdamz-rgb/stellar-agentic-framework
+# Install the skill for Claude Code
+npx skills add rylsherdamz-rgb/stellar-agentic-framework --agent claude-code
 
 # Or scaffold a full project
 npx create-stellar-agentic my-dapp --yes
@@ -44,7 +44,7 @@ npx create-stellar-agentic my-dapp --yes
 ### As a Claude Code Skill (recommended)
 
 ```bash
-npx skills add rylsherdamz-rgb/stellar-agentic-framework -y -g --agent claude-code
+npx skills add rylsherdamz-rgb/stellar-agentic-framework --agent claude-code
 ```
 
 Then in any Claude Code session, just say:
@@ -118,7 +118,13 @@ This scaffolds a complete project with:
 ### Method 1: Skills Registry (Claude Code)
 
 ```bash
-npx skills add rylsherdamz-rgb/stellar-agentic-framework -y -g --agent claude-code
+# Register for Claude Code (recommended)
+npx skills add rylsherdamz-rgb/stellar-agentic-framework --agent claude-code
+
+# Or for Cursor
+npx skills add rylsherdamz-rgb/stellar-agentic-framework --agent cursor
+
+
 ```
 
 All 10 dependency skills auto-install to `~/.claude/skills/`.
@@ -128,7 +134,7 @@ All 10 dependency skills auto-install to `~/.claude/skills/`.
 ```bash
 git clone https://github.com/rylsherdamz-rgb/stellar-agentic-framework.git
 cd stellar-agentic-framework
-npx skills add ./ -g --agent claude-code
+npx skills add ./ --agent claude-code
 ```
 
 ### Method 3: npm Global (CLI only)
@@ -364,7 +370,10 @@ stellar-agentic-framework/
 |------|-------------|
 | `-y` | Skip confirmation prompt |
 | `-g` | Install globally (not just project-local) |
-| `--agent claude-code` | Register for Claude Code |
+| `--agent claude-code` | Register for Claude Code (default) |
+| `--agent cursor` | Register for Cursor |
+
+| `--agent copilot` | Register for GitHub Copilot |
 
 ---
 
