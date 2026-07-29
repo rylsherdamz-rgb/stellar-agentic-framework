@@ -4,7 +4,6 @@
 </picture>
 
 [![GitHub](https://img.shields.io/badge/repo-v0.1.0-7B3FE4?logo=github)](https://github.com/rylsherdamz-rgb/stellar-agentic-framework)
-[![npm](https://img.shields.io/badge/npm-pending-7B3FE4?logo=npm)](https://www.npmjs.com/package/create-stellar-agentic)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Claude Code Skill](https://img.shields.io/badge/skill-claude--code-7B3FE4?logo=anthropic)](https://github.com/rylsherdamz-rgb/stellar-agentic-framework)
 [![Built for Stellar](https://img.shields.io/badge/built%20for-Stellar-000000?logo=stellar)](https://stellar.org)

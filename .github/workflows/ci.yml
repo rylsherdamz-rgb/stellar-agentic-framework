@@ -1,0 +1,109 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  release:
+    types: [published]
+
+jobs:
+  validate:
+    name: Validate Framework
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate SKILL.md frontmatter
+        run: |
+          echo "::group::SKILL.md frontmatter"
+          errors=0
+          for field in name version description tags; do
+            if head -20 SKILL.md | grep -q "^$field:"; then
+              echo "  ✓ $field"
+            else
+              echo "  ✗ $field (missing)"
+              errors=$((errors+1))
+            fi
+          done
+          head -20 SKILL.md | grep -q "^author:" && echo "  ✓ author" || echo "  ⚠ author (optional)"
+          head -20 SKILL.md | grep -q "^homepage:" && echo "  ✓ homepage" || echo "  ⚠ homepage (optional)"
+          echo "::endgroup::"
+          exit $errors
+
+      - name: Validate skill.json
+        run: |
+          echo "::group::skill.json"
+          test -f skill.json && echo "  ✓ exists" || echo "  ✗ missing"
+          if [ -f skill.json ]; then
+            node -e "const s = require('./skill.json'); console.log('  name:', s.name); console.log('  displayName:', s.displayName)"
+          fi
+          echo "::endgroup::"
+
+      - name: Validate marketplace.json
+        run: |
+          echo "::group::marketplace.json"
+          test -f .claude-plugin/marketplace.json && echo "  ✓ exists" || echo "  ✗ missing"
+          echo "::endgroup::"
+
+      - name: Validate agent files
+        run: |
+          echo "::group::Agent files"
+          for f in agents/*.md; do
+            name=$(basename "$f" .md)
+            head -10 "$f" | grep -q "^name:" && echo "  ✓ $name" || echo "  ✗ $name (missing frontmatter)"
+          done
+          echo "::endgroup::"
+
+      - name: Validate CLI entry point
+        run: |
+          echo "::group::CLI"
+          test -f packages/create-stellar-agentic/index.mjs && echo "  ✓ entry" || echo "  ✗ missing"
+          echo "::endgroup::"
+
+      - name: Validate bundled skills
+        run: |
+          echo "::group::Bundled skills"
+          for dir in skills/*/; do
+            name=$(basename "$dir")
+            if [ -f "$dir/SKILL.md" ]; then
+              echo "  ✓ $name"
+            else
+              echo "  ✗ $name (missing SKILL.md)"
+            fi
+          done
+          echo "::endgroup::"
+
+      - name: Validate README badges
+        run: |
+          echo "::group::README badges"
+          grep -c "img.shields.io" README.md && echo "  ✓ badges present: $(grep -c 'img.shields.io' README.md)" || echo "  ⚠ no badges found"
+          echo "::endgroup::"
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm run validate
+
+  publish-cli:
+    name: Publish CLI to npm
+    needs: [validate, lint]
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm publish --access public
+        working-directory: packages/create-stellar-agentic
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

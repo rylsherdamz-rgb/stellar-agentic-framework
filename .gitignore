@@ -1,6 +1,57 @@
+# Dependencies
 node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
 target/
+dist/
+build/
+.wasm
+*.wasm
+
+# Environment
 .env
-tmp/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Next.js
+.next/
+
+# Test
+coverage/
+.nyc_output/
+
+# Temp
+tmp/
+temp/
+
+# Graphify
+graphify-out/
+graphify-out/cache/
+
+# CLI test output
+test-*/

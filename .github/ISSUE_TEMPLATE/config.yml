@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: NPXSkills Directory Submission
+    url: mailto:blunotech@gmail.com
+    about: Submit the skill for listing on npxskills.xyz
+  - name: Skills Directory Submission
+    url: https://www.skillsdirectory.com/skills/submit
+    about: Submit the skill for listing on skillsdirectory.com
+  - name: Discussion
+    url: https://github.com/rylsherdamz-rgb/stellar-agentic-framework/discussions
+    about: Ask questions or discuss features
