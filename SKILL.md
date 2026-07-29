@@ -77,6 +77,10 @@ Ask the user what they're building. Map keywords to eval templates and write a d
 ### Phase 2 — Spawn Agents (parallel)
 Route sub-tasks to specialist agents via Task tool. Each agent loads its skill context.
 
+Each agent receives: user intent, eval criteria, template files, example patterns
+from `templates/<domain>/examples/`, and strict instruction to use
+`useStellarData()` / agentic kit for all blockchain queries — never raw RPC or curl.
+
 | Agent | Skills loaded |
 |-------|--------------|
 | `@stellar-contracts` | smart-contracts + assets + zk-proofs |

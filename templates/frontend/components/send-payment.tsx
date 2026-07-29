@@ -1,90 +1,57 @@
 "use client";
 
 import { useState } from "react";
-import * as StellarSdk from "@stellar/stellar-sdk";
 import { useStellarWallet } from "@/hooks/use-stellar-wallet";
-import { horizon, config } from "@/lib/stellar-config";
 
 export function SendPayment() {
-  const { address, sign } = useStellarWallet();
+  const { address, sign, getBalances } = useStellarWallet();
   const [destination, setDestination] = useState("");
   const [amount, setAmount] = useState("");
   const [status, setStatus] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!address) {
-      setStatus("Connect your wallet first");
-      return;
-    }
-
-    setLoading(true);
-    setStatus("Building transaction...");
-
+  async function handleSend() {
+    if (!address || !destination || !amount) return;
+    setStatus("Sending...");
     try {
-      const account = await horizon.loadAccount(address);
-
-      const tx = new StellarSdk.TransactionBuilder(account, {
-        fee: StellarSdk.BASE_FEE,
-        networkPassphrase: config.networkPassphrase,
-      })
-        .addOperation(
-          StellarSdk.Operation.payment({
-            destination,
-            asset: StellarSdk.Asset.native(),
-            amount,
-          })
-        )
-        .setTimeout(180)
-        .build();
-
-      setStatus("Sign in your wallet...");
-      const signedXdr = await sign(tx.toXDR());
-
-      const signedTx = StellarSdk.TransactionBuilder.fromXDR(
-        signedXdr,
-        config.networkPassphrase
-      ) as StellarSdk.Transaction;
-
-      setStatus("Submitting...");
-      const result = await horizon.submitTransaction(signedTx);
-
-      setStatus(`Sent! Hash: ${result.hash}`);
-    } catch (err: any) {
-      setStatus(`Error: ${err.message}`);
-    } finally {
-      setLoading(false);
+      const tx = await fetch("/api/send-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ source: address, destination, amount }),
+      });
+      const data = await tx.json();
+      setStatus(`Sent! Hash: ${data.hash}`);
+      getBalances().then((bals) => {
+        const xlm = bals.find((b) => b.asset === "XLM");
+        if (xlm) setStatus((s) => `${s} — Balance: ${parseFloat(xlm.balance).toFixed(2)} XLM`);
+      });
+    } catch (e: any) {
+      setStatus(`Error: ${e.message}`);
     }
-  };
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
-      <h2 className="text-xl font-bold">Send XLM</h2>
+    <div className="p-4 border rounded space-y-2">
       <input
-        type="text"
-        placeholder="Destination G..."
+        className="border px-2 py-1 w-full"
         value={destination}
         onChange={(e) => setDestination(e.target.value)}
-        className="w-full p-2 border rounded"
+        placeholder="Destination address"
       />
       <input
-        type="text"
-        placeholder="Amount (XLM)"
+        className="border px-2 py-1 w-full"
+        type="number"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
-        className="w-full p-2 border rounded"
+        placeholder="Amount (XLM)"
       />
       <button
-        type="submit"
-        disabled={loading || !address}
-        className="w-full p-2 bg-blue-500 text-white rounded disabled:opacity-50 hover:bg-blue-600"
+        onClick={handleSend}
+        disabled={!address || !destination || !amount}
+        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50"
       >
-        {loading ? status : "Send"}
+        Send Payment
       </button>
-      {status && (
-        <p className="text-sm text-gray-600 break-all">{status}</p>
-      )}
-    </form>
+      {status && <p className="text-xs text-gray-600">{status}</p>}
+    </div>
   );
 }

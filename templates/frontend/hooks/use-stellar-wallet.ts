@@ -7,6 +7,7 @@ import {
   allowAllModules,
   FREIGHTER_ID,
 } from "@creit.tech/stellar-wallets-kit";
+import { useStellarData } from "./use-stellar-data";
 
 const kit = new StellarWalletsKit({
   network: WalletNetwork.TESTNET,
@@ -17,6 +18,7 @@ const kit = new StellarWalletsKit({
 export function useStellarWallet() {
   const [address, setAddress] = useState<string | null>(null);
   const [network, setNetwork] = useState<string | null>(null);
+  const data = useStellarData();
 
   const connect = useCallback(async () => {
     await kit.openModal({
@@ -24,6 +26,8 @@ export function useStellarWallet() {
         kit.setWallet(option.id);
         const { address: addr } = await kit.getAddress();
         setAddress(addr);
+        const { network: net } = await kit.getNetwork();
+        setNetwork(net);
       },
     });
   }, []);
@@ -41,5 +45,10 @@ export function useStellarWallet() {
     []
   );
 
-  return { address, network, connect, disconnect, sign, kit };
+  const getBalances = useCallback(async () => {
+    if (!address) return [];
+    return data.getBalances(address);
+  }, [address, data]);
+
+  return { address, network, connect, disconnect, sign, getBalances, data, kit };
 }
