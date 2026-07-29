@@ -29,6 +29,8 @@ npx create-stellar-agentic my-dapp --yes
 | **🧠 6 Specialist Agents** | Parallel execution for contracts, frontend, backend, payments, ops, and ZK |
 | **✅ Eval-Driven Quality** | Structured pass/fail criteria, max 3 retries, pass@k metrics |
 | **🔗 Stellar Agentic Kit** | `useStellarData()`, `useContract()`, `useStellarWallet()` — no raw RPC |
+| **🎨 Frontend Design Skill** | Tailwind CSS-first Stellar dApp UI — wallet UX, 4-phase tx flows, dark mode |
+| **🚀 Auto-Deploy Contracts** | Test gate (`cargo test` must pass) → deploy → record ID to `.env` + tracker |
 | **⚡ MCP Integrations** | Stellar RPC, filesystem, GitHub, Playwright — direct from Claude |
 | **📦 One-Command Scaffold** | `npx create-stellar-agentic` — full dApp in seconds |
 | **📊 Knowledge Graphs** | Auto-graphify every project — architecture navigation, query, explain |
@@ -60,10 +62,12 @@ npm install
 ```
 
 This scaffolds a complete project with:
-- SEP-41 token contract (`contracts/token/`)
-- Next.js frontend with Stellar Wallets Kit (`frontend/`)
+- SEP-41 token contract (`contracts/token/`) — auto-deployed on first testnet deploy
+- Next.js frontend with Stellar Wallets Kit + Tailwind CSS (`frontend/`)
 - Express backend with x402 middleware (`backend/`)
+- Agentic Kit hooks (`useStellarData`, `useContract`, `useWallet`) pre-installed
 - CI/CD workflows (`.github/`)
+- Deploy tracker (`data/deployments/`) + deploy script (`scripts/deploy-contract.sh`)
 
 ---
 
@@ -239,7 +243,7 @@ function TokenBalance({ contractId }: { contractId: string }) {
 | Agent | Role | Skills Loaded |
 |-------|------|---------------|
 | `@stellar-contracts` | Rust smart contracts (soroban-sdk) | smart-contracts + assets + zk-proofs |
-| `@stellar-frontend` | Next.js + Stellar Wallets Kit | dapp + data |
+| `@stellar-frontend` | Next.js + Stellar Wallets Kit + Tailwind CSS | dapp + data + frontend-design |
 | `@stellar-backend` | Express + RPC services | data + agentic-payments |
 | `@stellar-payments` | x402 + MPP payment flows | agentic-payments + assets |
 | `@stellar-ops` | CI/CD + Docker + deploy | (no extra skills) |
@@ -261,6 +265,35 @@ Claude has direct access to the Stellar blockchain through MCP servers configure
 | `playwright` | `browser_navigate`, `browser_click`, `browser_screenshot` | E2E testing |
 
 **Rule**: MCP for development/debugging; `useStellarData()` in production frontend code.
+
+---
+
+## Contract Deployment
+
+Contracts are deployed through a gated workflow that runs tests first, then records the result.
+
+### Deploy Gate
+
+```
+cargo test  →  FAIL → fix code → retry
+           →  PASS → proceed to deploy
+```
+
+The deploy script (`scripts/deploy-contract.sh`) bails immediately if any test fails.
+
+### Auto-Deploy (First Time)
+
+If `data/deployments/testnet.json` does **not** exist (no prior deploy on that network), the agent deploys silently without prompting. On subsequent deploys it asks `Deploy <name> to testnet? [Y/n]`.
+
+### Tracking
+
+Every deploy writes to three places:
+
+| Location | Purpose |
+|----------|---------|
+| `data/deployments/<network>.json` | Deploy tracker — contract ID, WASM hash, timestamp |
+| `.env` | `NEXT_PUBLIC_<NAME>_CONTRACT_ID=<contract-id>` for frontend/backend |
+| `NEXT_PUBLIC_*` env var | Accessible in browser code via `process.env` |
 
 ---
 
@@ -291,6 +324,7 @@ stellar-agentic-framework/
 │   ├── standards/                  #   SEPs + CAPs
 │   ├── zk-proofs/                  #   Groth16 + Circom
 │   ├── stellar-mcp/                #   MCP tools guide
+│   ├── frontend-design/            #   Tailwind CSS dApp UI patterns
 │   └── graphify/                   #   Knowledge graphs
 ├── scripts/                        # Utility scripts
 │   └── deploy-contract.sh          #   Build → test gate → deploy → record
@@ -340,7 +374,7 @@ Every task starts with defined success criteria. Evals catch failures early and 
 
 | Eval | What It Checks |
 |------|---------------|
-| `01-contract-eval` | Compiles to WASM, unit tests pass, auth on privileged fns, TTL on writes |
+| `01-contract-eval` | Compiles to WASM, unit tests pass, auth on privileged fns, TTL on writes, deploy gated on all tests passing, contract ID recorded in tracker + `.env` |
 | `02-frontend-eval` | TypeScript compiles, wallet connect/disconnect, contract read/write, no raw RPC |
 | `03-backend-eval` | Server starts, balance & contract endpoints return valid data, CORS present |
 | `04-payment-eval` | x402 rejects unpaid with 402, accepts valid payment, MPP charge flow succeeds |
@@ -357,6 +391,8 @@ Every task starts with defined success criteria. Evals catch failures early and 
 | `STELLAR_RPC_URL` | No | `https://soroban-testnet.stellar.org` | RPC endpoint |
 | `STELLAR_NETWORK_PASSPHRASE` | No | `Test SDF Network ; September 2015` | Network passphrase |
 | `STELLAR_SECRET_KEY` | For deploy | — | Deployer account secret |
+| `STELLAR_DEPLOYER` | For deploy | `deployer` | Stellar CLI source account alias |
+| `NEXT_PUBLIC_<NAME>_CONTRACT_ID` | After deploy | — | Auto-populated by deploy script |
 | `OZ_CHANNEL_ID` | For x402 | — | OZ Channels facilitator ID |
 | `OZ_API_KEY` | For x402 | — | OZ Channels API key |
 
