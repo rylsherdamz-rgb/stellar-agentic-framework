@@ -1,0 +1,117 @@
+{
+  "package.json": {
+    "mtime": 1785298256.8912926,
+    "ast_hash": "5d7d9196bce67b0db6609ab65e9dac60",
+    "semantic_hash": "5d7d9196bce67b0db6609ab65e9dac60"
+  },
+  "templates/backend/package.json": {
+    "mtime": 1785298213.589093,
+    "ast_hash": "f52114e0dc33cd609dbca8f3966b4d08",
+    "semantic_hash": "f52114e0dc33cd609dbca8f3966b4d08"
+  },
+  "templates/backend/src/index.ts": {
+    "mtime": 1785298217.979132,
+    "ast_hash": "08774c7cc8fc842e9c70d4b1f5806a1a",
+    "semantic_hash": "08774c7cc8fc842e9c70d4b1f5806a1a"
+  },
+  "templates/backend/src/middleware/x402.ts": {
+    "mtime": 1785298222.4858384,
+    "ast_hash": "9779c97cfe664cad13fb5e149591a2e2",
+    "semantic_hash": "9779c97cfe664cad13fb5e149591a2e2"
+  },
+  "templates/backend/src/services/stellar.ts": {
+    "mtime": 1785298220.0991507,
+    "ast_hash": "de154920b87215e4e5c69a87eb2fcf4d",
+    "semantic_hash": "de154920b87215e4e5c69a87eb2fcf4d"
+  },
+  "templates/backend/tsconfig.json": {
+    "mtime": 1785298223.4791806,
+    "ast_hash": "c1a228374f15716d2e5f3f78f11d8663",
+    "semantic_hash": "c1a228374f15716d2e5f3f78f11d8663"
+  },
+  "templates/contracts/hello-world/src/lib.rs": {
+    "mtime": 1785298153.8185568,
+    "ast_hash": "e3b2be2d7b800f6bebccce28389c3eec",
+    "semantic_hash": "e3b2be2d7b800f6bebccce28389c3eec"
+  },
+  "templates/contracts/hello-world/src/test.rs": {
+    "mtime": 1785298156.6185822,
+    "ast_hash": "1403e8fbf6b85f36918f16dbc2018bd2",
+    "semantic_hash": "1403e8fbf6b85f36918f16dbc2018bd2"
+  },
+  "templates/contracts/token/src/lib.rs": {
+    "mtime": 1785298175.6154203,
+    "ast_hash": "13bf57c8aa02f47f0415ea8e313ba3a9",
+    "semantic_hash": "13bf57c8aa02f47f0415ea8e313ba3a9"
+  },
+  "templates/contracts/token/src/test.rs": {
+    "mtime": 1785298179.715457,
+    "ast_hash": "31d2b331a7a0226dedefa9e08dead890",
+    "semantic_hash": "31d2b331a7a0226dedefa9e08dead890"
+  },
+  "templates/frontend/components/connect-button.tsx": {
+    "mtime": 1785298198.9089622,
+    "ast_hash": "a489e8d450ebbf39482edde809c2f798",
+    "semantic_hash": "a489e8d450ebbf39482edde809c2f798"
+  },
+  "templates/frontend/components/invoke-contract.tsx": {
+    "mtime": 1785298207.0490348,
+    "ast_hash": "b63d5c1f02b39a69c4e2c1fc0db6fc91",
+    "semantic_hash": "b63d5c1f02b39a69c4e2c1fc0db6fc91"
+  },
+  "templates/frontend/components/send-payment.tsx": {
+    "mtime": 1785298203.112333,
+    "ast_hash": "0713ff99958b71a4918876a2d89aab4a",
+    "semantic_hash": "0713ff99958b71a4918876a2d89aab4a"
+  },
+  "templates/frontend/hooks/use-contract.ts": {
+    "mtime": 1785298193.775583,
+    "ast_hash": "ea9eb401471375c013f5921c342e77aa",
+    "semantic_hash": "ea9eb401471375c013f5921c342e77aa"
+  },
+  "templates/frontend/hooks/use-stellar-wallet.ts": {
+    "mtime": 1785298189.3655436,
+    "ast_hash": "da02716bd511ad5dae6eeb3cf0ab4127",
+    "semantic_hash": "da02716bd511ad5dae6eeb3cf0ab4127"
+  },
+  "templates/frontend/lib/stellar-config.ts": {
+    "mtime": 1785298187.3088586,
+    "ast_hash": "86768443a2bde44946f6fc9cf6a11810",
+    "semantic_hash": "86768443a2bde44946f6fc9cf6a11810"
+  },
+  "templates/frontend/package.json": {
+    "mtime": 1785298184.8321698,
+    "ast_hash": "21b757fe50076ffa7b7c09013935beac",
+    "semantic_hash": "21b757fe50076ffa7b7c09013935beac"
+  },
+  "templates/frontend/providers/wallet-provider.tsx": {
+    "mtime": 1785298208.4490473,
+    "ast_hash": "2d18bbe95c019ccf0112a896bb99f68c",
+    "semantic_hash": "2d18bbe95c019ccf0112a896bb99f68c"
+  },
+  "tests/contract-state.mjs": {
+    "mtime": 1785298251.3027594,
+    "ast_hash": "01b37abc0a3f5bfba16403fbc7f165d2",
+    "semantic_hash": "01b37abc0a3f5bfba16403fbc7f165d2"
+  },
+  "tests/mpp-charge-flow.mjs": {
+    "mtime": 1785298249.3494089,
+    "ast_hash": "f8abc44313006ed40d577eaabb332336",
+    "semantic_hash": "f8abc44313006ed40d577eaabb332336"
+  },
+  "tests/playwright.config.ts": {
+    "mtime": 1785298241.969344,
+    "ast_hash": "34caef02b0ed31e94691e3fe2f50b23c",
+    "semantic_hash": "34caef02b0ed31e94691e3fe2f50b23c"
+  },
+  "tests/wallet-connect.spec.ts": {
+    "mtime": 1785298244.0487573,
+    "ast_hash": "8229026dba77673b6f9eb4a4e5042d46",
+    "semantic_hash": "8229026dba77673b6f9eb4a4e5042d46"
+  },
+  "tests/x402-flow.mjs": {
+    "mtime": 1785298247.136056,
+    "ast_hash": "39fc0244790dc6ac83ba8b3530d9bc0f",
+    "semantic_hash": "39fc0244790dc6ac83ba8b3530d9bc0f"
+  }
+}

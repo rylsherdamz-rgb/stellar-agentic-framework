@@ -1,0 +1,35 @@
+{
+  "name": "create-stellar-agentic",
+  "version": "0.1.0",
+  "description": "Scaffold a Stellar dApp with the Stellar Agentic Framework — contracts, frontend, backend, and agentic payments in one command",
+  "type": "module",
+  "bin": {
+    "create-stellar-agentic": "./index.mjs",
+    "stellar-agentic": "./index.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "stellar",
+    "soroban",
+    "stellar-wallets-kit",
+    "stellar-agentic-kit",
+    "x402",
+    "mpp",
+    "smart-contracts",
+    "dapp",
+    "scaffold"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/richie/stellar-agentic-framework"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "index.mjs"
+  ]
+}

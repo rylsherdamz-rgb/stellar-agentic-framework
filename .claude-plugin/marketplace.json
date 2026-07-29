@@ -1,0 +1,38 @@
+{
+  "name": "stellar-agentic",
+  "description": "Eval-driven multi-agent framework for building production Stellar dApps",
+  "owner": {
+    "name": "Stellar Agentic Framework",
+    "url": "https://github.com/richie/stellar-agentic-framework"
+  },
+  "plugins": [
+    {
+      "name": "stellar-agentic-framework",
+      "description": "Orchestration layer that routes tasks to 6 specialist agents and verifies output with structured evals",
+      "source": {
+        "source": "github",
+        "repo": "richie/stellar-agentic-framework",
+        "ref": "main"
+      },
+      "skills": ["."],
+      "agents": ["agents/"],
+      "commands": [".claude/commands/"],
+      "hooks": [],
+      "mcpServers": [
+        {
+          "name": "graphify",
+          "description": "Knowledge graph query and analysis for the Stellar Agentic Framework",
+          "source": {
+            "source": "npm",
+            "package": "graphify"
+          }
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "pluginRoot": "."
+  },
+  "categories": ["blockchain", "development", "smart-contracts"],
+  "tags": ["stellar", "soroban", "dapp", "agentic-os", "eval-driven"]
+}

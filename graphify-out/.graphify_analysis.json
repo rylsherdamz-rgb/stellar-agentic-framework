@@ -1,0 +1,357 @@
+{
+  "communities": {
+    "0": [
+      "string",
+      "symbol",
+      "templates_contracts_token_src_lib",
+      "templates_contracts_token_src_lib_datakey",
+      "templates_contracts_token_src_lib_extend_balance_ttl",
+      "templates_contracts_token_src_lib_extend_instance_ttl",
+      "templates_contracts_token_src_lib_rs_address",
+      "templates_contracts_token_src_lib_rs_env",
+      "templates_contracts_token_src_lib_token",
+      "templates_contracts_token_src_lib_token_allowance",
+      "templates_contracts_token_src_lib_token_approve",
+      "templates_contracts_token_src_lib_token_balance",
+      "templates_contracts_token_src_lib_token_burn",
+      "templates_contracts_token_src_lib_token_constructor",
+      "templates_contracts_token_src_lib_token_decimals",
+      "templates_contracts_token_src_lib_token_mint",
+      "templates_contracts_token_src_lib_token_name",
+      "templates_contracts_token_src_lib_token_symbol",
+      "templates_contracts_token_src_lib_token_total_supply",
+      "templates_contracts_token_src_lib_token_transfer",
+      "templates_contracts_token_src_lib_token_transfer_from",
+      "templates_contracts_token_src_lib_tokenerror"
+    ],
+    "1": [
+      "templates_backend_package",
+      "templates_backend_package_devdependencies",
+      "templates_backend_package_devdependencies_tsx",
+      "templates_backend_package_devdependencies_types_express",
+      "templates_backend_package_devdependencies_types_node",
+      "templates_backend_package_devdependencies_typescript",
+      "templates_backend_package_json_types_node",
+      "templates_backend_package_json_typescript",
+      "templates_backend_package_name",
+      "templates_backend_package_private",
+      "templates_backend_package_scripts",
+      "templates_backend_package_scripts_build",
+      "templates_backend_package_scripts_dev",
+      "templates_backend_package_scripts_start",
+      "templates_backend_package_scripts_typecheck",
+      "templates_backend_package_type",
+      "templates_backend_package_version",
+      "tsx",
+      "types_express"
+    ],
+    "2": [
+      "dotenv",
+      "express",
+      "mppx",
+      "stellar_mpp",
+      "templates_backend_package_dependencies",
+      "templates_backend_package_dependencies_dotenv",
+      "templates_backend_package_dependencies_express",
+      "templates_backend_package_dependencies_mppx",
+      "templates_backend_package_dependencies_stellar_mpp",
+      "templates_backend_package_dependencies_stellar_stellar_sdk",
+      "templates_backend_package_dependencies_x402_core",
+      "templates_backend_package_dependencies_x402_express",
+      "templates_backend_package_dependencies_x402_stellar",
+      "templates_backend_package_json_stellar_stellar_sdk",
+      "x402_core",
+      "x402_express",
+      "x402_stellar"
+    ],
+    "3": [
+      "package",
+      "package_description",
+      "package_engines",
+      "package_engines_node",
+      "package_name",
+      "package_private",
+      "package_scripts",
+      "package_scripts_graphify",
+      "package_scripts_lint",
+      "package_scripts_scaffold",
+      "package_scripts_test",
+      "package_version",
+      "package_workspaces",
+      "ref_templates_backend",
+      "ref_templates_frontend",
+      "ref_tests"
+    ],
+    "4": [
+      "ref_src",
+      "templates_backend_tsconfig",
+      "templates_backend_tsconfig_compileroptions",
+      "templates_backend_tsconfig_compileroptions_esmoduleinterop",
+      "templates_backend_tsconfig_compileroptions_forceconsistentcasinginfilenames",
+      "templates_backend_tsconfig_compileroptions_module",
+      "templates_backend_tsconfig_compileroptions_moduleresolution",
+      "templates_backend_tsconfig_compileroptions_outdir",
+      "templates_backend_tsconfig_compileroptions_resolvejsonmodule",
+      "templates_backend_tsconfig_compileroptions_rootdir",
+      "templates_backend_tsconfig_compileroptions_skiplibcheck",
+      "templates_backend_tsconfig_compileroptions_strict",
+      "templates_backend_tsconfig_compileroptions_target",
+      "templates_backend_tsconfig_include"
+    ],
+    "5": [
+      "creit_tech_stellar_wallets_kit",
+      "next",
+      "react",
+      "react_dom",
+      "stellar_freighter_api",
+      "templates_frontend_package_dependencies",
+      "templates_frontend_package_dependencies_creit_tech_stellar_wallets_kit",
+      "templates_frontend_package_dependencies_next",
+      "templates_frontend_package_dependencies_react",
+      "templates_frontend_package_dependencies_react_dom",
+      "templates_frontend_package_dependencies_stellar_freighter_api",
+      "templates_frontend_package_dependencies_stellar_stellar_sdk",
+      "templates_frontend_package_json_stellar_stellar_sdk"
+    ],
+    "6": [
+      "eslint",
+      "tailwindcss",
+      "templates_frontend_package_devdependencies",
+      "templates_frontend_package_devdependencies_eslint",
+      "templates_frontend_package_devdependencies_tailwindcss",
+      "templates_frontend_package_devdependencies_types_node",
+      "templates_frontend_package_devdependencies_types_react",
+      "templates_frontend_package_devdependencies_types_react_dom",
+      "templates_frontend_package_devdependencies_typescript",
+      "templates_frontend_package_json_types_node",
+      "templates_frontend_package_json_typescript",
+      "types_react",
+      "types_react_dom"
+    ],
+    "7": [
+      "result",
+      "templates_contracts_hello_world_src_lib",
+      "templates_contracts_hello_world_src_lib_datakey",
+      "templates_contracts_hello_world_src_lib_error",
+      "templates_contracts_hello_world_src_lib_helloworld",
+      "templates_contracts_hello_world_src_lib_helloworld_constructor",
+      "templates_contracts_hello_world_src_lib_helloworld_get_count",
+      "templates_contracts_hello_world_src_lib_helloworld_increment",
+      "templates_contracts_hello_world_src_lib_incremented",
+      "templates_contracts_hello_world_src_lib_rs_address",
+      "templates_contracts_hello_world_src_lib_rs_env"
+    ],
+    "8": [
+      "templates_backend_src_index",
+      "templates_backend_src_index_app",
+      "templates_backend_src_index_port",
+      "templates_backend_src_middleware_x402",
+      "templates_backend_src_middleware_x402_x402middleware",
+      "templates_backend_src_services_stellar",
+      "templates_backend_src_services_stellar_configs",
+      "templates_backend_src_services_stellar_horizon",
+      "templates_backend_src_services_stellar_requireenv",
+      "templates_backend_src_services_stellar_rpc"
+    ],
+    "9": [
+      "templates_frontend_package",
+      "templates_frontend_package_name",
+      "templates_frontend_package_private",
+      "templates_frontend_package_scripts",
+      "templates_frontend_package_scripts_build",
+      "templates_frontend_package_scripts_dev",
+      "templates_frontend_package_scripts_lint",
+      "templates_frontend_package_scripts_start",
+      "templates_frontend_package_scripts_typecheck",
+      "templates_frontend_package_version"
+    ],
+    "10": [
+      "templates_contracts_token_src_test",
+      "templates_contracts_token_src_test_rs_address",
+      "templates_contracts_token_src_test_rs_env",
+      "templates_contracts_token_src_test_setup",
+      "templates_contracts_token_src_test_test_approve_and_transfer_from",
+      "templates_contracts_token_src_test_test_metadata",
+      "templates_contracts_token_src_test_test_mint_and_balance",
+      "templates_contracts_token_src_test_test_transfer",
+      "tokenclient"
+    ],
+    "11": [
+      "templates_frontend_lib_stellar_config",
+      "templates_frontend_lib_stellar_config_configs",
+      "templates_frontend_lib_stellar_config_horizon",
+      "templates_frontend_lib_stellar_config_networkconfig",
+      "templates_frontend_lib_stellar_config_requireenv",
+      "templates_frontend_lib_stellar_config_rpc"
+    ],
+    "12": [
+      "templates_frontend_providers_wallet_provider",
+      "templates_frontend_providers_wallet_provider_usewallet",
+      "templates_frontend_providers_wallet_provider_walletcontext",
+      "templates_frontend_providers_wallet_provider_walletcontexttype",
+      "templates_frontend_providers_wallet_provider_walletprovider"
+    ],
+    "13": [
+      "templates_contracts_hello_world_src_test",
+      "templates_contracts_hello_world_src_test_test_events_emitted",
+      "templates_contracts_hello_world_src_test_test_increment",
+      "templates_contracts_hello_world_src_test_test_initial_state"
+    ],
+    "14": [
+      "templates_frontend_components_invoke_contract",
+      "templates_frontend_components_invoke_contract_invokecontract",
+      "templates_frontend_components_invoke_contract_props"
+    ],
+    "15": [
+      "templates_frontend_hooks_use_stellar_wallet",
+      "templates_frontend_hooks_use_stellar_wallet_kit",
+      "templates_frontend_hooks_use_stellar_wallet_usestellarwallet"
+    ],
+    "16": [
+      "templates_frontend_components_connect_button",
+      "templates_frontend_components_connect_button_connectbutton"
+    ],
+    "17": [
+      "templates_frontend_components_send_payment",
+      "templates_frontend_components_send_payment_sendpayment"
+    ],
+    "18": [
+      "templates_frontend_hooks_use_contract",
+      "templates_frontend_hooks_use_contract_usecontract"
+    ],
+    "19": [
+      "tests_contract_state",
+      "tests_contract_state_testcontractstate"
+    ],
+    "20": [
+      "tests_mpp_charge_flow",
+      "tests_mpp_charge_flow_testmppchargeflow"
+    ],
+    "21": [
+      "tests_x402_flow",
+      "tests_x402_flow_testx402flow"
+    ],
+    "22": [
+      "tests_playwright_config"
+    ],
+    "23": [
+      "tests_wallet_connect_spec"
+    ]
+  },
+  "cohesion": {
+    "0": 0.22943722943722944,
+    "1": 0.10526315789473684,
+    "2": 0.11764705882352941,
+    "3": 0.125,
+    "4": 0.14285714285714285,
+    "5": 0.15384615384615385,
+    "6": 0.15384615384615385,
+    "7": 0.2545454545454545,
+    "8": 0.26666666666666666,
+    "9": 0.2,
+    "10": 0.3333333333333333,
+    "11": 0.3333333333333333,
+    "12": 0.4,
+    "13": 0.5,
+    "14": 0.6666666666666666,
+    "15": 0.6666666666666666,
+    "16": 1.0,
+    "17": 1.0,
+    "18": 1.0,
+    "19": 1.0,
+    "20": 1.0,
+    "21": 1.0,
+    "22": 1.0,
+    "23": 1.0
+  },
+  "gods": [
+    {
+      "id": "templates_contracts_token_src_lib_token",
+      "label": "Token",
+      "degree": 13
+    },
+    {
+      "id": "templates_backend_tsconfig_compileroptions",
+      "label": "compilerOptions",
+      "degree": 11
+    },
+    {
+      "id": "templates_contracts_token_src_lib_extend_balance_ttl",
+      "label": "extend_balance_ttl()",
+      "degree": 8
+    },
+    {
+      "id": "templates_contracts_token_src_test_setup",
+      "label": "setup()",
+      "degree": 8
+    },
+    {
+      "id": "templates_frontend_package_scripts",
+      "label": "scripts",
+      "degree": 6
+    },
+    {
+      "id": "package_scripts",
+      "label": "scripts",
+      "degree": 5
+    },
+    {
+      "id": "templates_backend_package_scripts",
+      "label": "scripts",
+      "degree": 5
+    },
+    {
+      "id": "templates_contracts_token_src_lib_extend_instance_ttl",
+      "label": "extend_instance_ttl()",
+      "degree": 5
+    },
+    {
+      "id": "package_workspaces",
+      "label": "workspaces",
+      "degree": 4
+    },
+    {
+      "id": "templates_contracts_hello_world_src_lib_helloworld",
+      "label": "HelloWorld",
+      "degree": 4
+    }
+  ],
+  "surprises": [],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `dependencies` connect `dependencies` to `package.json`?",
+      "why": "High betweenness centrality (0.024) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `dependencies` connect `dependencies` to `package.json`?",
+      "why": "High betweenness centrality (0.019) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `devDependencies` connect `devDependencies` to `package.json`?",
+      "why": "High betweenness centrality (0.019) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `name`, `version`, `private` to the rest of the system?",
+      "why": "76 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `package.json` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `dependencies` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `package.json` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.125 - nodes in this community are weakly interconnected."
+    }
+  ]
+}

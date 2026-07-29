@@ -1,0 +1,21 @@
+{
+  "name": "stellar-agentic-framework",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Eval-driven agentic harness for building production Stellar dApps",
+  "workspaces": [
+    "packages/create-stellar-agentic",
+    "templates/frontend",
+    "templates/backend",
+    "tests"
+  ],
+  "scripts": {
+    "scaffold": "node scripts/scaffold.mjs",
+    "graphify": "graphify . --no-viz",
+    "test": "node tests/run.mjs",
+    "lint": "echo 'Framework lint: ok'"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
