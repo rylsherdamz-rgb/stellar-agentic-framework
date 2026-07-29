@@ -1,35 +1,36 @@
 import * as StellarSdk from "@stellar/stellar-sdk";
-
-const requireEnv = (name: string): string => {
-  const value = process.env[name];
-  if (!value) throw new Error(`Missing required env var: ${name}`);
-  return value;
-};
+import express from "express";
 
 const NETWORK = process.env.STELLAR_NETWORK || "testnet";
 
-const configs: Record<string, {
-  rpcUrl: string;
+type NetworkConfig = {
   horizonUrl: string;
+  rpcUrl: string;
   networkPassphrase: string;
-}> = {
-  mainnet: {
-    rpcUrl: requireEnv("STELLAR_MAINNET_RPC_URL"),
-    horizonUrl: "https://horizon.stellar.org",
-    networkPassphrase: StellarSdk.Networks.PUBLIC,
-  },
+  friendbotUrl: string | null;
+};
+
+const configs: Record<string, NetworkConfig> = {
   testnet: {
     rpcUrl: "https://soroban-testnet.stellar.org",
     horizonUrl: "https://horizon-testnet.stellar.org",
     networkPassphrase: StellarSdk.Networks.TESTNET,
+    friendbotUrl: "https://friendbot.stellar.org",
   },
   local: {
     rpcUrl: "http://localhost:8000/soroban/rpc",
     horizonUrl: "http://localhost:8000",
     networkPassphrase: "Standalone Network ; February 2017",
+    friendbotUrl: "http://localhost:8000/friendbot",
+  },
+  mainnet: {
+    rpcUrl: process.env.STELLAR_MAINNET_RPC_URL || "",
+    horizonUrl: "https://horizon.stellar.org",
+    networkPassphrase: StellarSdk.Networks.PUBLIC,
+    friendbotUrl: null,
   },
 };
 
 export const config = configs[NETWORK];
-export const horizon = new StellarSdk.Horizon.Server(config.horizonUrl);
 export const rpc = new StellarSdk.rpc.Server(config.rpcUrl);
+export const horizon = new StellarSdk.Horizon.Server(config.horizonUrl);

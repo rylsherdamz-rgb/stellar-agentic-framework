@@ -1,11 +1,5 @@
 import * as StellarSdk from "@stellar/stellar-sdk";
 
-const requireEnv = (name: string): string => {
-  const value = process.env[name];
-  if (!value) throw new Error(`Missing required env var: ${name}`);
-  return value;
-};
-
 const NETWORK = process.env.NEXT_PUBLIC_STELLAR_NETWORK || "testnet";
 
 type NetworkConfig = {
@@ -16,12 +10,6 @@ type NetworkConfig = {
 };
 
 const configs: Record<string, NetworkConfig> = {
-  mainnet: {
-    rpcUrl: requireEnv("NEXT_PUBLIC_STELLAR_MAINNET_RPC_URL"),
-    horizonUrl: "https://horizon.stellar.org",
-    networkPassphrase: StellarSdk.Networks.PUBLIC,
-    friendbotUrl: null,
-  },
   testnet: {
     rpcUrl: "https://soroban-testnet.stellar.org",
     horizonUrl: "https://horizon-testnet.stellar.org",
@@ -33,6 +21,12 @@ const configs: Record<string, NetworkConfig> = {
     horizonUrl: "http://localhost:8000",
     networkPassphrase: "Standalone Network ; February 2017",
     friendbotUrl: "http://localhost:8000/friendbot",
+  },
+  mainnet: {
+    rpcUrl: process.env.NEXT_PUBLIC_STELLAR_MAINNET_RPC_URL || "",
+    horizonUrl: "https://horizon.stellar.org",
+    networkPassphrase: StellarSdk.Networks.PUBLIC,
+    friendbotUrl: null,
   },
 };
 
