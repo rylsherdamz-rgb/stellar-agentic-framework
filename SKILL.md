@@ -36,19 +36,27 @@ project/
 └── templates/         # Reference code for contracts, frontend, backend
 ```
 
-## Skills loaded
-- `smart-contracts` (Rust, soroban-sdk)
-- `dapp` (Next.js, Stellar Wallets Kit)
-- `data` (RPC, Horizon)
-- `assets` (classic assets, SAC, trustlines)
-- `agentic-payments` (x402, MPP Charge/Channel)
-- `standards` (SEPs, CAPs, ecosystem)
-- `zk-proofs` (Groth16, BLS12-381, Circom)
-- `graphify` (knowledge graph for every project)
+## Skills (must always be loaded)
+Every skill listed below must be loaded into context at session start and never dropped:
+- `smart-contracts` — Rust/soroban-sdk contract development
+- `dapp` — Next.js frontend, Stellar Wallets Kit
+- `data` — Stellar RPC, Horizon queries
+- `assets` — Classic assets, SAC, trustlines
+- `agentic-payments` — x402, MPP Charge/Channel
+- `standards` — SEPs, CAPs, ecosystem references
+- `zk-proofs` — Zero-knowledge proofs, Groth16
+- `graphify` — Knowledge graph for every project
 
 ## Harness Workflow
 
-### Phase 0 — Self-graphify
+### Phase 0 — Skill Boot + Self-Graphify
+Before handling any user request, ensure all skills are loaded:
+1. Run the SKILL_BOOT procedure from CLAUDE.md (reads each skill's SKILL.md into context)
+2. Verify all 8 skills are present; if any missing, install from `skills/` dir
+3. Graph the framework itself for architecture navigation:
+```bash
+/graphify . --no-viz
+```
 ```bash
 /graphify . --no-viz
 ```

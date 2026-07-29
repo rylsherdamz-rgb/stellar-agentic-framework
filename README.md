@@ -85,7 +85,14 @@ pass@k metrics, eval results, SHIP IT / NEEDS WORK decision.
 - `standards` — SEPs, CAPs, ecosystem
 - `zk-proofs` — Zero-knowledge proofs, Groth16
 - `graphify` — Knowledge graph for every project
-- (Kernel, agents, commands, memory baked into CLAUDE.md)
+- (Kernel loads all 8 skills at session start via Skill Boot)
+
+## Skill Boot
+Every session starts by loading all 8 skills into context:
+```block
+SKILL_BOOT: reads ~/.claude/skills/{name}/SKILL.md for each required skill
+Fallback: if not installed, copies from skills/ in this repo
+```
 
 ## Project Structure
 
@@ -100,6 +107,7 @@ stellar-agentic-framework/
 │   ├── decisions/              # ADR-format decisions
 │   └── logs/                   # Session logs
 ├── evals/                      # 5 eval definitions
+├── skills/                     # Bundled dependency skills (auto-install)
 ├── templates/                  # Reference code
 │   ├── contracts/              # hello-world, token
 │   ├── frontend/               # Next.js + Wallets Kit
