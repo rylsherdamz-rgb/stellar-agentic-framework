@@ -217,12 +217,63 @@ cargo test -- --nocapture
 wasm-strip target/wasm32v1-none/release/my_contract.wasm -o my_contract.optimized.wasm
 ls -lh my_contract.optimized.wasm
 
-# Deploy to testnet
+# Manual deploy
 stellar contract deploy \
   --wasm target/wasm32v1-none/release/my_contract.wasm \
   --source-account deployer \
   --network testnet
 ```
+
+### Tests Must Pass First — The Gate
+
+Deployment is **gated on all tests passing**. If any test fails, the agent aborts and reports which tests failed. Only green tests → deploy.
+
+```
+cargo test  →  FAIL → fix & retry
+           →  PASS → deploy
+```
+
+### Auto-Deploy (First Time)
+
+**If no prior contract has been deployed on the target network**, the contracts agent auto-deploys without prompting. This is the first-deploy rule:
+
+1. Agent checks `data/deployments/testnet.json`
+2. If missing → first deploy → silent auto-deploy
+3. If exists → ask user before deploying
+
+### Record & Env Update
+
+Every deploy must record the contract ID in two places:
+
+```bash
+# data/deployments/<network>.json — deployment tracker
+{
+  "network": "testnet",
+  "deployer": "deployer",
+  "contracts": [
+    {
+      "name": "my_contract",
+      "contract_id": "CA...",
+      "wasm_hash": "<sha256>",
+      "deployed_at": "2026-07-29T12:00:00Z"
+    }
+  ]
+}
+
+# .env — for frontend/backend reference
+NEXT_PUBLIC_MY_CONTRACT_CONTRACT_ID=CA...
+```
+
+### Helper Script
+
+```bash
+./scripts/deploy-contract.sh \
+  target/wasm32v1-none/release/my_contract.wasm \
+  my_contract \
+  testnet
+```
+
+This script handles build check, deploy, tracker update, and `.env` update in one step.
 
 ---
 
@@ -233,4 +284,7 @@ stellar contract deploy \
 3. Test both happy path and error paths
 4. Verify events are emitted with correct topics and data
 5. Check TTL extension on persistent storage writes
-6. Never deploy without passing tests
+6. Never deploy with failing tests — deploy is gated on `cargo test` passing 100%
+7. Always record deployed contract IDs in `data/deployments/<network>.json` and `.env`
+8. First deployment on a network auto-deploys (no prior deploy file found)
+9. Run `cargo test` before `cargo build --release` to fail fast on test failures

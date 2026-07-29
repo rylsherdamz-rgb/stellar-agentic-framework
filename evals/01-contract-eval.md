@@ -24,4 +24,7 @@ Tests:
   - overflow-check: PASS/FAIL — overflow-checks=true in release profile
   - reinit-guard: PASS/FAIL — constructor pattern used, no double-initialize
   - ttl-management: PASS/FAIL — TTL extended on every write
+  - deploy-gate: PASS/FAIL — deploy only runs after all tests pass
+  - deploy-record: PASS/FAIL — contract ID recorded in data/deployments/ and .env
+  - auto-deploy: PASS/FAIL — first deploy on network auto-deployed, subsequent asks
 Result: X/Y passed

@@ -141,7 +141,8 @@ skills/<name>/
 2. Register in:
    - `CLAUDE.md` — add to Skill Boot list
    - `SKILL.md` — add to skills section
-   - `packages/create-stellar-agentic/index.mjs` — add to `REQUIRED_SKILLS`
+   - `packages/create-stellar-agentic/index.mjs` — add to `REQUIRED_SKILLS` and update count
+   - `evals/02-frontend-eval.md` — add design eval criteria if applicable
 
 ## CLI Changes
 

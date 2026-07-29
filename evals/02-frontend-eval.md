@@ -14,6 +14,9 @@ Success Criteria:
   - [ ] Loading states during wallet signing and transaction submission
   - [ ] Environment variables via `.env.local` (not hardcoded)
   - [ ] RPC client used for contract interactions (not Horizon for Soroban txs)
+  - [ ] Distinct visual states for each transaction flow phase (simulate/sign/submit/confirm)
+  - [ ] All agentic kit hooks used — no raw RPC or curl
+  - [ ] Wallet connection lifecycle renders correctly (connected/disconnected states)
 Expected Output: A frontend/ directory with working Next.js app, wallet connection UI, and contract interaction patterns.
 
 [REGRESSION EVAL: frontend-wallet-integration]
@@ -23,4 +26,7 @@ Tests:
   - tx-simulation: PASS/FAIL — simulates before sending
   - error-messages: PASS/FAIL — user-friendly error messages for common failures
   - env-config: PASS/FAIL — network config loaded from env, not hardcoded
+  - tx-flow-phases: PASS/FAIL — distinct UI for simulate/sign/submit/confirm states
+  - error-states: PASS/FAIL — context-aware, actionable error messages
+  - design-intent: PASS/FAIL — cohesive aesthetic direction, no generic defaults
 Result: X/Y passed

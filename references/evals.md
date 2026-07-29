@@ -7,6 +7,8 @@
 - Tests pass (`cargo test`)
 - No unsafe code
 - Uses soroban-sdk types correctly
+- Deploy gated on all tests passing
+- Deployed contract recorded in `data/deployments/` and `.env`
 
 ## 02-frontend-eval
 - TypeScript compiles (`npx tsc --noEmit`)
@@ -14,6 +16,8 @@
 - Contract read shows data
 - Contract write submits tx
 - Uses `useStellarData()` — no raw RPC calls
+- Distinct UI states for each tx flow phase
+- Cohesive aesthetic direction — no generic defaults
 
 ## 03-backend-eval
 - Server starts

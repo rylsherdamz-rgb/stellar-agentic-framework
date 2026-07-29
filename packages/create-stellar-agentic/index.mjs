@@ -13,7 +13,7 @@ const SKILLS_DIR = join(PKG_ROOT, "skills");
 const REQUIRED_SKILLS = [
   "smart-contracts", "dapp", "data", "assets",
   "agentic-payments", "standards", "zk-proofs",
-  "stellar-mcp", "graphify",
+  "stellar-mcp", "frontend-design", "graphify",
 ];
 
 const IS_TTY = process.stdout.isTTY;
@@ -31,7 +31,7 @@ async function installDependencySkills() {
   const skillBase = join(homeDir, ".claude", "skills");
   const missing = REQUIRED_SKILLS.filter((s) => !existsSync(join(skillBase, s, "SKILL.md")));
   if (missing.length === 0) {
-    console.log("  ✓ All 9 dependency skills already installed");
+    console.log("  ✓ All 10 dependency skills already installed");
     return;
   }
   console.log(`  Installing ${missing.length} missing skills...`);
@@ -86,8 +86,10 @@ function copyFrameworkSkill(targetDir) {
   mkdirSync(join(targetDir, "data/projects"), { recursive: true });
   mkdirSync(join(targetDir, "data/decisions"), { recursive: true });
   mkdirSync(join(targetDir, "data/logs"), { recursive: true });
+  mkdirSync(join(targetDir, "data/deployments"), { recursive: true });
   writeFileSync(join(targetDir, "data/README.md"),
     "# Data Directory\n\nPersistent file-based memory for the Stellar Agentic OS.\n");
+  copyDir(join(PKG_ROOT, "scripts"), join(targetDir, "scripts"));
 }
 
 async function scaffoldTemplates(targetDir, types, skipPrompts) {

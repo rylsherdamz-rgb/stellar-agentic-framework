@@ -21,7 +21,7 @@ Types: `full` (default), `contract-only`, `frontend-only`, `backend-only`, `paym
 6. Run `cd <project-name> && npm install`
 7. Run `cargo init --workspace <project-name>/contracts/` if contracts included
 8. Write decision record to `data/decisions/<date>-scaffold-<project-name>.md`
-9. Run `/graphify <project-name> --no-viz` to graph the new project
+10. Run `/graphify <project-name> --no-viz` to graph the new project
 10. Report: "Project <project-name> scaffolded at <path>. Next: run /deploy or /test-e2e"
 
 ## Templates Reference

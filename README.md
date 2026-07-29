@@ -32,7 +32,7 @@ npx create-stellar-agentic my-dapp --yes
 | **⚡ MCP Integrations** | Stellar RPC, filesystem, GitHub, Playwright — direct from Claude |
 | **📦 One-Command Scaffold** | `npx create-stellar-agentic` — full dApp in seconds |
 | **📊 Knowledge Graphs** | Auto-graphify every project — architecture navigation, query, explain |
-| **🧩 9 Bundled Skills** | smart-contracts, dapp, data, assets, agentic-payments, standards, zk-proofs, stellar-mcp, graphify |
+| **🧩 10 Bundled Skills** | smart-contracts, dapp, data, assets, agentic-payments, standards, zk-proofs, stellar-mcp, frontend-design, graphify |
 | **🔄 Stateful Memory** | per-project context, ADR decision log, session activity logs |
 
 ---
@@ -117,7 +117,7 @@ This scaffolds a complete project with:
 npx skills add rylsherdamz-rgb/stellar-agentic-framework -y -g --agent claude-code
 ```
 
-All 9 dependency skills auto-install to `~/.claude/skills/`.
+All 10 dependency skills auto-install to `~/.claude/skills/`.
 
 ### Method 2: Clone + Install
 
@@ -282,7 +282,7 @@ stellar-agentic-framework/
 │   ├── evals.md
 │   ├── agentic-kit.md
 │   └── templates.md
-├── skills/                         # 9 bundled dependency skills (auto-installed)
+├── skills/                         # 10 bundled dependency skills (auto-installed)
 │   ├── smart-contracts/            #   Rust + soroban-sdk
 │   ├── dapp/                       #   Frontend hooks + examples
 │   ├── data/                       #   RPC + Horizon queries
@@ -292,6 +292,8 @@ stellar-agentic-framework/
 │   ├── zk-proofs/                  #   Groth16 + Circom
 │   ├── stellar-mcp/                #   MCP tools guide
 │   └── graphify/                   #   Knowledge graphs
+├── scripts/                        # Utility scripts
+│   └── deploy-contract.sh          #   Build → test gate → deploy → record
 ├── templates/                      # Scaffold source code
 │   ├── contracts/                  #   hello-world + SEP-41 token
 │   ├── frontend/                   #   Next.js + hooks + components
@@ -301,6 +303,7 @@ stellar-agentic-framework/
 ├── data/                           # Persistent memory
 │   ├── projects/                   #   Per-project context
 │   ├── decisions/                  #   ADR-format decisions
+│   ├── deployments/                #   Contract deploy tracker
 │   └── logs/                       #   Session logs
 ├── .claude/commands/               # 4 slash commands
 ├── .mcp.json                       # MCP server config
@@ -378,7 +381,7 @@ Every task starts with defined success criteria. Evals catch failures early and 
 
 ## FAQ
 
-**Q: Do I need to install all 9 dependency skills manually?**  
+**Q: Do I need to install all 10 dependency skills manually?**  
 No. The CLI and `npx skills add` both auto-install missing skills from the bundled `skills/` directory.
 
 **Q: Can I use this without Claude Code?**  

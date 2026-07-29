@@ -8,7 +8,7 @@ At the start of every session, immediately load every skill into context:
 
 ```block
 SKILL_BOOT:
-  for each name in [smart-contracts, dapp, data, assets, agentic-payments, standards, zk-proofs, stellar-mcp, graphify]:
+  for each name in [smart-contracts, dapp, data, assets, agentic-payments, standards, zk-proofs, stellar-mcp, frontend-design, graphify]:
     path = ~/.claude/skills/{name}/SKILL.md
     if path exists:
       read path and keep its contents in context for the session
@@ -29,6 +29,7 @@ Every skill listed below must be in context before handling any user request. If
 - `standards` — SEPs, CAPs, ecosystem references
 - `zk-proofs` — Zero-knowledge proofs, Groth16
 - `stellar-mcp` — MCP tools (Stellar RPC, filesystem, GitHub, Playwright)
+- `frontend-design` — Stellar dApp UI design, wallet UX, transaction flow patterns
 - `graphify` — Knowledge graph for every project
 
 ## Agent Registry
@@ -36,7 +37,7 @@ Every skill listed below must be in context before handling any user request. If
 | Agent | Role | Trigger Keywords | Loaded Skills |
 |-------|------|-----------------|---------------|
 | @stellar-contracts | Build & test Rust smart contracts | contract, token, soroban, rust, wasm, deploy | smart-contracts, assets, zk-proofs |
-| @stellar-frontend | Build Next.js dApp frontend | frontend, ui, wallet, connect, react, nextjs | dapp, data |
+| @stellar-frontend | Build Next.js dApp frontend | frontend, ui, design, wallet, connect, react, nextjs | dapp, data, frontend-design |
 | @stellar-backend | Build API servers & indexers | backend, api, server, indexer, horizon, rpc | data, agentic-payments |
 | @stellar-payments | Configure x402/MPP payment flows | payment, x402, mpp, paywall, usdc, monetize | agentic-payments, assets |
 | @stellar-ops | DevOps, CI/CD, deployment | deploy, ci, cd, docker, github actions | — |
@@ -55,7 +56,7 @@ Every skill listed below must be in context before handling any user request. If
 - Contract tasks → high-reasoning model (complex Rust + WASM)
 - Frontend tasks → standard model (React/Next.js patterns)
 - ZK tasks → high-reasoning model (cryptographic verification)
-- Always keep all 8 skills in context — do not drop them when switching agents
+- Always keep all 10 skills in context — do not drop them when switching agents
 
 ## State
 - `data/projects/` — Per-project context
