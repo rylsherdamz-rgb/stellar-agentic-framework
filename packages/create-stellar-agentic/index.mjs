@@ -59,6 +59,21 @@ function logItem(label, desc) {
   console.log(`    ${color(symbol("arrow"), "cyan")} ${color(label, "bold")}  ${desc}`);
 }
 
+async function runAsync(cmd, args, opts = {}) {
+  const { spawn } = await import("child_process");
+  return new Promise((resolve, reject) => {
+    const proc = spawn(cmd, args, { stdio: "pipe", ...opts });
+    let out = "";
+    proc.stdout.on("data", (d) => { out += d; });
+    proc.stderr.on("data", (d) => { out += d; });
+    proc.on("close", (code) => {
+      if (code === 0) resolve(out.trim());
+      else reject(new Error(out.trim() || `exit code ${code}`));
+    });
+    proc.on("error", reject);
+  });
+}
+
 function startSpinner(msg) {
   if (!IS_TTY) { console.log(`  ${msg}...`); return { stop: () => {} }; }
   const frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
@@ -168,8 +183,7 @@ async function scaffoldTemplates(targetDir, types, skipPrompts) {
 
     const sp = startSpinner("Running create-next-app");
     try {
-      const { execSync } = await import("child_process");
-      execSync(`npx ${nextArgs.join(" ")}`, { stdio: "pipe", timeout: 120000 });
+      await runAsync("npx", nextArgs, { timeout: 180000 });
       sp.stop(true);
       logOk("create-next-app scaffolded TypeScript project");
     } catch {
@@ -309,12 +323,8 @@ async function main() {
     const frontendDir = join(resolved, "frontend");
     if (existsSync(join(frontendDir, "package.json")) && !noInstall) {
       try {
-        const { execSync } = await import("child_process");
         const sp2 = startSpinner("Installing Stellar packages");
-        execSync(
-          "npm install @stellar/stellar-sdk@^12.0.0 @creit.tech/stellar-wallets-kit@^1.0.0 @stellar/freighter-api@^2.0.0",
-          { cwd: frontendDir, stdio: "pipe", timeout: 120000 }
-        );
+        await runAsync("npm", ["install", "@stellar/stellar-sdk@^12.0.0", "@creit.tech/stellar-wallets-kit@^1.0.0", "@stellar/freighter-api@^2.0.0"], { cwd: frontendDir, timeout: 180000 });
         sp2.stop(true);
         logOk("Stellar packages installed");
       } catch {
