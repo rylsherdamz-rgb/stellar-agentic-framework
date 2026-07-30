@@ -27,7 +27,7 @@
     {
       "name": "stellar-agentic-orchestrator",
       "path": "SKILL.md",
-      "description": "Main orchestration skill that loads 9 Stellar skills, routes tasks to 6 specialist agents, and verifies output with structured evals",
+      "description": "Main orchestration skill that loads 10 Stellar skills, routes tasks to 6 specialist agents, and verifies output with structured evals",
       "agents": ["claude-code", "opencode"]
     },
     {
