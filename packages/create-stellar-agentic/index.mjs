@@ -4,6 +4,7 @@ import { existsSync, mkdirSync, cpSync, readdirSync, statSync, writeFileSync } f
 import { join, dirname, basename } from "path";
 import { fileURLToPath } from "url";
 import { createInterface } from "readline";
+import { cmdList, cmdAdd, cmdInstallAll, listMissing, installSkill, skillExists, isInstalled, listAvailable } from "./skill-manager.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PKG_ROOT = existsSync(join(__dirname, "templates"))
@@ -11,12 +12,6 @@ const PKG_ROOT = existsSync(join(__dirname, "templates"))
   : join(__dirname, "../..");
 const TEMPLATES_DIR = join(PKG_ROOT, "templates");
 const SKILLS_DIR = join(PKG_ROOT, "skills");
-
-const REQUIRED_SKILLS = [
-  "smart-contracts", "dapp", "data", "assets",
-  "agentic-payments", "standards", "zk-proofs",
-  "stellar-mcp", "frontend-design", "graphify",
-];
 
 const IS_TTY = process.stdout.isTTY;
 
@@ -110,8 +105,7 @@ function ask(query) {
 async function installDependencySkills() {
   const homeDir = process.env.HOME || process.env.USERPROFILE;
   if (!homeDir) { logWarn("Cannot determine home dir, skipping skill install"); return; }
-  const skillBase = join(homeDir, ".claude", "skills");
-  const missing = REQUIRED_SKILLS.filter((s) => !existsSync(join(skillBase, s, "SKILL.md")));
+  const missing = listMissing();
   if (missing.length === 0) {
     logOk("All 10 skills already installed at ~/.claude/skills/");
     return;
@@ -119,20 +113,14 @@ async function installDependencySkills() {
   const sp3 = startSpinner(`Installing ${missing.length} dependency skills`);
   const warnings = [];
   for (const name of missing) {
-    const src = join(SKILLS_DIR, name);
-    if (!existsSync(join(src, "SKILL.md"))) {
-      warnings.push(name);
-      continue;
-    }
-    const dest = join(skillBase, name);
-    mkdirSync(dest, { recursive: true });
-    copyDir(src, dest);
+    const result = installSkill(name);
+    if (!result.ok) warnings.push(name);
   }
   sp3.stop(true);
   for (const name of missing) {
-    if (existsSync(join(SKILLS_DIR, name, "SKILL.md"))) logOk(`${name} installed`);
+    if (skillExists(name) && isInstalled(name)) logOk(`${name} installed`);
+    else if (skillExists(name)) logWarn(`"${name}" skill not found in framework`);
   }
-  for (const name of warnings) logWarn(`"${name}" skill not found in framework`);
 }
 
 function copyDir(src, dest, filter = () => true) {
@@ -228,8 +216,11 @@ async function main() {
   const args = process.argv.slice(2);
   const usage = `
   ${color("Usage", "bold")}
-    ${color("npx create-stellar-agentic <project-name>", "cyan")} ${color("[options]", "dim")}
-    ${color("npx create-stellar-agentic --skill-only <dir>", "cyan")}
+    ${color("npx create-stellar-agentic <project-name>", "cyan")}              ${color("Scaffold a new project", "dim")}
+    ${color("npx create-stellar-agentic skills add <name>", "cyan")}           ${color("Install a skill to ~/.claude/skills/", "dim")}
+    ${color("npx create-stellar-agentic skills list", "cyan")}                 ${color("List available and installed skills", "dim")}
+    ${color("npx create-stellar-agentic skills install-all", "cyan")}          ${color("Install all framework skills", "dim")}
+    ${color("npx create-stellar-agentic --skill-only <dir>", "cyan")}         ${color("Install framework into existing project", "dim")}
     ${color("npx create-stellar-agentic --help", "cyan")}
 
   ${color("Options", "bold")}
@@ -240,13 +231,35 @@ async function main() {
 
   ${color("Examples", "bold")}
     ${color("npx create-stellar-agentic my-stellar-dapp", "dim")}
+    ${color("npx create-stellar-agentic skills add smart-contracts", "dim")}
+    ${color("npx create-stellar-agentic skills add graphify data", "dim")}
     ${color("npx create-stellar-agentic . --skill-only", "dim")}
-    ${color("npx create-stellar-agentic my-contracts --template contract-only", "dim")}
 `;
 
   if (args.includes("--help") || args.includes("-h")) {
     console.log(BANNER);
     console.log(usage);
+    process.exit(0);
+  }
+
+  // Skills subcommand routing
+  if (args[0] === "skills") {
+    const sub = args[1];
+    switch (sub) {
+      case "list":
+        cmdList();
+        break;
+      case "add":
+        cmdAdd(args.slice(2));
+        break;
+      case "install-all":
+        cmdInstallAll();
+        break;
+      default:
+        console.error(`  ${color(symbol("cross"), "red")} Unknown subcommand: ${color(sub || "", "yellow")}`);
+        console.log(usage);
+        process.exit(1);
+    }
     process.exit(0);
   }
 

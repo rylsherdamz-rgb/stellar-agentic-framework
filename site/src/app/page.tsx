@@ -3,23 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Box, Layout, Server, CreditCard, ShieldCheck, GitBranch, ArrowRight, ChevronDown, Copy, Check } from "lucide-react";
+import { Box, Layout, Server, CreditCard, ShieldCheck, GitBranch, ArrowRight, Copy, Check } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const terminalScript = [
-  { type: "cmd", text: "npx create-stellar-agentic my-dapp" },
-  { type: "output", text: "Scaffolding Stellar Agentic dApp...", delay: 600 },
-  { type: "output", text: "  ok  contracts/hello-world/src/lib.rs", delay: 200 },
-  { type: "output", text: "  ok  contracts/token/src/lib.rs", delay: 180 },
-  { type: "output", text: "  ok  frontend/src/app/page.tsx", delay: 220 },
-  { type: "output", text: "  ok  frontend/src/app/layout.tsx", delay: 160 },
-  { type: "output", text: "  ok  frontend/stellar-wallets-kit.tsx", delay: 200 },
-  { type: "output", text: "  ok  backend/src/index.ts", delay: 180 },
-  { type: "output", text: "", delay: 300 },
-  { type: "cmd", text: "npm run dev" },
-  { type: "output", text: "  Stellar Agentic dApp running on http://localhost:3000", delay: 500 },
-];
 
 const features = [
   { icon: Box, title: "Smart Contracts", desc: "Scaffold Rust/Soroban contracts with build, test, and deploy workflows." },
@@ -36,6 +22,14 @@ const agents = [
   { handle: "@stellar-backend", role: "API and indexer engineer", skills: ["RPC", "Horizon", "Data"] },
   { handle: "@stellar-payments", role: "x402 and MPP payment flow architect", skills: ["USDC", "Paywall", "MPP"] },
   { handle: "@stellar-zk", role: "Zero-knowledge integration engineer", skills: ["Groth16", "Circom", "Noir"] },
+];
+
+const ROUTES = [
+  { label: "Features", href: "#features" },
+  { label: "Architecture", href: "#architecture" },
+  { label: "Install", href: "#install" },
+  { label: "Agents", href: "#agents" },
+  { label: "Usage", href: "#usage" },
 ];
 
 function CopyButton({ getText, children, className = "" }: { getText: () => string; children?: React.ReactNode; className?: string }) {
@@ -78,10 +72,6 @@ function Logomark({ size = 24 }: { size?: number }) {
       <line x1="12" y1="15.5" x2="12" y2="21" stroke="#7c3aed" strokeWidth="1" opacity="0.35" />
       <line x1="3" y1="12" x2="8.5" y2="12" stroke="#7c3aed" strokeWidth="1" opacity="0.35" />
       <line x1="15.5" y1="12" x2="21" y2="12" stroke="#7c3aed" strokeWidth="1" opacity="0.35" />
-      <line x1="6.1" y1="6.1" x2="9.9" y2="9.9" stroke="#7c3aed" strokeWidth="1" opacity="0.2" />
-      <line x1="14.1" y1="14.1" x2="17.9" y2="17.9" stroke="#7c3aed" strokeWidth="1" opacity="0.2" />
-      <line x1="17.9" y1="6.1" x2="14.1" y2="9.9" stroke="#7c3aed" strokeWidth="1" opacity="0.2" />
-      <line x1="9.9" y1="14.1" x2="6.1" y2="17.9" stroke="#7c3aed" strokeWidth="1" opacity="0.2" />
     </svg>
   );
 }
@@ -89,22 +79,11 @@ function Logomark({ size = 24 }: { size?: number }) {
 export default function Home() {
   const heroRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
+  const archRef = useRef<HTMLDivElement>(null);
+  const installRef = useRef<HTMLDivElement>(null);
   const featuresRef = useRef<HTMLDivElement>(null);
   const agentsRef = useRef<HTMLDivElement>(null);
   const usageRef = useRef<HTMLDivElement>(null);
-  const archRef = useRef<HTMLDivElement>(null);
-  const [lineIdx, setLineIdx] = useState(0);
-  const [showCursor, setShowCursor] = useState(true);
-
-  useEffect(() => {
-    if (lineIdx >= terminalScript.length) return;
-    const line = terminalScript[lineIdx];
-    const delay = line.type === "cmd" ? 400 : (line.delay || 100);
-    const t = setTimeout(() => setLineIdx((i) => i + 1), line.type === "output" && line.text === "" ? 200 : delay);
-    return () => clearTimeout(t);
-  }, [lineIdx]);
-
-  useEffect(() => { setShowCursor(lineIdx < terminalScript.length); }, [lineIdx]);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -112,26 +91,19 @@ export default function Home() {
     if (!hero || !glow) return;
     gsap.fromTo(hero.querySelector("h1"), { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power3.out" });
     gsap.fromTo(hero.querySelector("p"), { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.7, ease: "power3.out", delay: 0.2 });
-    gsap.fromTo(hero.querySelector(".hero-actions"), { autoAlpha: 0, y: 15 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out", delay: 0.4 });
+    gsap.fromTo(hero.querySelector(".hero-actions"), { autoAlpha: 0, y: 15 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out", delay: 0.3 });
+    gsap.fromTo(hero.querySelector(".hero-mini-term"), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out", delay: 0.5 });
     const ctx = gsap.context(() => {
       ScrollTrigger.create({ trigger: hero, start: "top top", end: "bottom top", onUpdate: (self) => { gsap.set(glow, { y: self.progress * 80, scale: 1 + self.progress * 0.15, opacity: 1 - self.progress * 0.4 }); } });
     }, hero);
     return () => ctx.revert();
   }, []);
 
+  useSectionAnim(archRef, ".arch-pipe-card", { stagger: 0.08 });
+  useSectionAnim(installRef, ".install-card", { stagger: 0.12 });
   useSectionAnim(featuresRef, ".card", { stagger: 0.07 });
   useSectionAnim(agentsRef, ".agent-card", { stagger: 0.06, extra: { scale: 0.95 } });
   useSectionAnim(usageRef, ".step", { stagger: 0.1, extra: { x: -20 } });
-
-  useEffect(() => {
-    const el = archRef.current;
-    if (!el) return;
-    const cards = el.querySelectorAll(".arch-card");
-    const ctx = gsap.context(() => {
-      gsap.fromTo(cards, { autoAlpha: 0, y: 15 }, { autoAlpha: 1, y: 0, duration: 0.45, stagger: 0.1, ease: "back.out(1.3)", scrollTrigger: { trigger: el, start: "top 82%" } });
-    });
-    return () => ctx.revert();
-  }, []);
 
   return (
     <>
@@ -139,12 +111,8 @@ export default function Home() {
         <div className="container">
           <a href="/" className="logo"><Logomark size={22} /> Stellar <em>Agentic</em> <span className="logo-suffix">Framework</span></a>
           <div className="links">
-            <a href="#features">Features</a>
-            <a href="#agents">Agents</a>
-            <a href="#usage">Usage</a>
-            <a href="#architecture">Architecture</a>
-            <a href="https://github.com/rylsherdamz-rgb/stellar-agentic-framework" target="_blank" rel="noopener">GitHub</a>
-            <a href="https://www.npmjs.com/package/create-stellar-agentic" className="nav-cta">Get Started</a>
+            {ROUTES.map((r) => <a key={r.label} href={r.href}>{r.label}</a>)}
+            <a href="#install" className="nav-cta">Get Started</a>
           </div>
         </div>
       </nav>
@@ -155,36 +123,88 @@ export default function Home() {
           <h1><span>Build Stellar dApps</span><br />with AI Agents</h1>
           <p>An eval-driven, multi-agent coding harness that routes tasks to specialist agents, verifies outputs against structured evals, and produces production-grade Stellar dApps.</p>
           <div className="hero-actions">
-            <CopyButton getText={() => "npx create-stellar-agentic"} className="btn btn-primary btn-copy">
-              npx create-stellar-agentic
-            </CopyButton>
-            <a href="https://www.npmjs.com/package/create-stellar-agentic" className="btn btn-secondary">View on npm &rarr;</a>
-            <a href="https://github.com/rylsherdamz-rgb/stellar-agentic-framework" className="btn btn-secondary">GitHub</a>
-          </div>
-          <div className="terminal-window">
-            <div className="terminal-bar">
-              <span className="terminal-dot" />
-              <span className="terminal-dot" />
-              <span className="terminal-dot" />
-              <span className="terminal-label">create-stellar-agentic</span>
-              <CopyButton getText={() => "npx create-stellar-agentic my-dapp"} />
+            <div className="hero-cta-group">
+              <span className="hero-cta-label">Use with Claude Code / OpenCode</span>
+              <CopyButton getText={() => "npx skills add rylsherdamz-rgb/stellar-agentic-framework"} className="btn btn-primary btn-copy">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                Install Skill
+              </CopyButton>
             </div>
-            <div className="terminal-body">
-              {terminalScript.slice(0, lineIdx).map((line, i) => (
-                <div key={i} className="terminal-line visible">
-                  {line.type === "cmd" ? (
-                    <><span className="terminal-prompt">$ </span><span className="terminal-cmd">{line.text}</span></>
-                  ) : line.text === "" ? <br /> : (
-                    <span className="terminal-output"><span className="ok">ok  </span>{line.text.replace("  ok  ", "")}</span>
-                  )}
-                </div>
-              ))}
-              {showCursor && (
-                <span className="terminal-prompt">
-                  {lineIdx === 0 || terminalScript[lineIdx - 1]?.type === "output" ? "$ " : ""}
-                  <span className="terminal-cursor" />
-                </span>
-              )}
+            <div className="hero-cta-group">
+              <span className="hero-cta-label">Use standalone</span>
+              <CopyButton getText={() => "npx create-stellar-agentic my-dapp"} className="btn btn-primary btn-copy">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+                Scaffold Project
+              </CopyButton>
+            </div>
+          </div>
+          <div className="hero-mini-term">
+            <div className="bar">
+              <span className="dot" /><span className="dot" /><span className="dot" />
+            </div>
+            <div className="body">
+              Kernel routes task to <span>@stellar-contracts</span>, <span>@stellar-frontend</span>, <span>@stellar-backend</span> &mdash; each verified against evals, max 3 retries, graphified on completion.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="architecture" ref={archRef}>
+        <div className="container">
+          <span className="section-label">Architecture</span>
+          <h2 className="section-title">How it works</h2>
+          <p className="section-sub">The kernel never writes code. It routes, verifies, and steers. Six agents do the work.</p>
+          <div className="arch-pipeline">
+            <div className="arch-pipe-card"><div className="label">Input</div><div className="value">Describe task</div><div className="meta">natural language</div></div>
+            <div className="arch-pipe-arrow"><ArrowRight size={16} /></div>
+            <div className="arch-pipe-card"><div className="label">Route</div><div className="value">Agent Router</div><div className="meta">6 specialists</div></div>
+            <div className="arch-pipe-arrow"><ArrowRight size={16} /></div>
+            <div className="arch-pipe-card"><div className="label">Build</div><div className="value">Skills + Evals</div><div className="meta">10 knowledge skills</div></div>
+            <div className="arch-pipe-arrow"><ArrowRight size={16} /></div>
+            <div className="arch-pipe-card"><div className="label">Verify</div><div className="value">Eval Gate</div><div className="meta">max 3 retries</div></div>
+            <div className="arch-pipe-arrow"><ArrowRight size={16} /></div>
+            <div className="arch-pipe-card"><div className="label">Output</div><div className="value">Contract + Frontend + API</div><div className="meta">graphified</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="install" className="section-alt" ref={installRef}>
+        <div className="container">
+          <span className="section-label">Install</span>
+          <h2 className="section-title">Two ways in</h2>
+          <p className="section-sub">Pick the path that matches your workflow.</p>
+          <div className="install-grid">
+            <div className="install-card">
+              <div className="install-card-header">
+                <span className="install-badge">A</span>
+                <h3>Agent Skill</h3>
+              </div>
+              <div className="install-audience">For Claude Code and OpenCode users</div>
+              <p className="install-desc">Install the framework as an AI skill. The harness activates automatically in every session — describe what you want in natural language.</p>
+              <div className="install-code-block">
+                <div className="install-code-bar">Shell</div>
+                <div className="install-code-body"><span className="cp">$ </span><span className="ccmd">npx skills add rylsherdamz-rgb/stellar-agentic-framework</span><br /><br /><span className="co"># or specify your agent</span><br /><span className="cp">$ </span><span className="ccmd">npx skills add rylsherdamz-rgb/stellar-agentic-framework --agent claude-code</span><br /><span className="cp">$ </span><span className="ccmd">npx skills add rylsherdamz-rgb/stellar-agentic-framework --agent opencode</span></div>
+              </div>
+              <div className="install-hint">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span>Then just describe: <em>&ldquo;Build a token contract with a React frontend and x402 payments&rdquo;</em></span>
+              </div>
+            </div>
+            <div className="install-card">
+              <div className="install-card-header">
+                <span className="install-badge">B</span>
+                <h3>Scaffold CLI</h3>
+              </div>
+              <div className="install-audience">For standalone projects</div>
+              <p className="install-desc">Generate a complete Stellar dApp in one command — contracts, frontend, backend, CI/CD, agents, and evals. No Claude Code required.</p>
+              <div className="install-code-block">
+                <div className="install-code-bar">Shell</div>
+                <div className="install-code-body"><span className="cp">$ </span><span className="ccmd">npx create-stellar-agentic my-dapp --yes</span><br /><br /><span className="co">  ✔ Scaffolding Stellar Agentic dApp...</span><br /><span className="co">  ✔ contracts/hello-world/src/lib.rs</span><br /><span className="co">  ✔ contracts/token/src/lib.rs</span><br /><span className="co">  ✔ frontend/src/app/page.tsx</span><br /><span className="co">  ✔ backend/src/index.ts</span><br /><span className="co">  ✔ All 10 skills installed</span></div>
+              </div>
+              <div className="install-hint">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span>If you use Claude Code later, it auto-detects the harness — no extra setup.</span>
+              </div>
             </div>
           </div>
         </div>
@@ -235,71 +255,33 @@ export default function Home() {
           <div className="steps">
             <div className="step">
               <span className="num">01</span>
-              <h4>Scaffold</h4>
-              <p><code>npx create-stellar-agentic my-dapp</code> generates your project with contracts, frontend, and agent config.</p>
+              <h4>Install</h4>
+              <p>Install the framework as an AI skill or scaffold a project.</p>
+              <div className="step-cmds">
+                <div><span className="step-cmd-prompt">$ </span><span>npx skills add rylsherdamz-rgb/stellar-agentic-framework</span></div>
+                <div><span className="step-cmd-prompt">$ </span><span>npx create-stellar-agentic my-dapp --yes</span></div>
+              </div>
             </div>
             <div className="step">
               <span className="num">02</span>
               <h4>Describe</h4>
-              <p>Tell the harness what you want: a token, a swap, a marketplace, a payment API. It routes to the right agent.</p>
+              <p>Tell the harness what to build. It routes to the right agent automatically.</p>
+              <div className="step-prompt">
+                <span className="step-agent">@stellar-contracts </span>create a SAC-compatible token with mint, burn, and transfer operations
+              </div>
             </div>
             <div className="step">
               <span className="num">03</span>
               <h4>Ship</h4>
-              <p>Agents write, eval-verify, and iterate. Production-grade Stellar dApps with zero manual wiring.</p>
-            </div>
-          </div>
-          <div className="code-block-wrapper" style={{ marginTop: "52px" }}>
-            <div className="code-block-bar">
-              <span className="code-block-lang">Shell</span>
-              <CopyButton getText={() => "npx create-stellar-agentic my-token-dapp\n\n@stellar-contracts create a SAC-compatible token\nwith mint, burn, and transfer operations"} />
-            </div>
-            <div className="code-block">
-              <span className="comment"># Create a new project</span><br />
-              npx create-stellar-agentic my-token-dapp<br /><br />
-              <span className="comment"># Inside the harness, describe your contract</span><br />
-              <span className="keyword">@stellar-contracts</span> create a SAC-compatible token<br />
-              with mint, burn, and transfer operations<br /><br />
-              <span className="comment"># Agent writes the contract, evals verify it</span><br />
-              <span className="ok">ok</span>  Contract compiles<br />
-              <span className="ok">ok</span>  Tests pass<br />
-              <span className="ok">ok</span>  Eval criteria met
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="architecture" className="section-alt" ref={archRef}>
-        <div className="container">
-          <span className="section-label">Architecture</span>
-          <h2 className="section-title">How it works</h2>
-          <p className="section-sub">A pipeline of skills, routing, verification, and knowledge graphing — all orchestrated by the Stellar Coding Harness.</p>
-          <div className="arch-diagram">
-            <div className="arch-box arch-harness">
-              <div className="arch-box-label">Stellar Coding Harness</div>
-              <div className="arch-row">
-                <div className="arch-card"><div className="arch-card-label">01</div><div className="arch-card-title">Skills</div><div className="arch-card-sub">load domain knowledge</div></div>
-                <div className="arch-arrow"><ArrowRight size={14} /></div>
-                <div className="arch-card"><div className="arch-card-label">02</div><div className="arch-card-title">Agent Router</div><div className="arch-card-sub">match &amp; route task</div></div>
-                <div className="arch-arrow"><ArrowRight size={14} /></div>
-                <div className="arch-card"><div className="arch-card-label">03</div><div className="arch-card-title">Evals</div><div className="arch-card-sub">verify output</div></div>
-              </div>
-              <div className="arch-connector-v"><ChevronDown size={14} /></div>
-              <div className="arch-row arch-single">
-                <div className="arch-card arch-card-green">
-                  <div className="arch-card-label">04</div>
-                  <div className="arch-card-title">Knowledge Graph</div>
-                  <div className="arch-card-sub">graphify-out/ &mdash; query &middot; path &middot; explain</div>
-                </div>
-              </div>
-            </div>
-            <div className="arch-connector-v arch-connector-out"><ChevronDown size={14} /></div>
-            <div className="arch-box arch-output">
-              <div className="arch-box-label">Output</div>
-              <div className="arch-row">
-                <div className="arch-card"><div className="arch-card-title">Contract</div><div className="arch-card-sub">Rust / WASM</div></div>
-                <div className="arch-card"><div className="arch-card-title">Frontend</div><div className="arch-card-sub">Next.js / Wallets Kit</div></div>
-                <div className="arch-card"><div className="arch-card-title">Backend</div><div className="arch-card-sub">API / Indexer</div></div>
+              <p>Agents write code, evals verify it, knowledge graph maps the project.</p>
+              <div className="step-evals">
+                <div className="step-eval"><span className="step-eval-icon pass" /><span>Contract compiles to WASM</span></div>
+                <div className="step-eval"><span className="step-eval-icon pass" /><span>Tests pass</span></div>
+                <div className="step-eval"><span className="step-eval-icon pass" /><span>Auth on privileged functions</span></div>
+                <div className="step-eval"><span className="step-eval-icon pass" /><span>TTL on writes</span></div>
+                <div className="step-eval"><span className="step-eval-icon pass" /><span>Frontend wallet connect/disconnect</span></div>
+                <div className="step-eval-summary">6/6 evals passed</div>
+                <div className="step-deploy"><code>/deploy . testnet</code></div>
               </div>
             </div>
           </div>
