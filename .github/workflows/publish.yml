@@ -1,6 +1,9 @@
 name: Publish
 
 on:
+  push:
+    tags:
+      - 'v*'
   release:
     types: [published]
   workflow_dispatch:
@@ -21,6 +24,14 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
+
+      - name: Sync version from git tag
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          if [[ -n "$TAG_VERSION" ]]; then
+            npm version "$TAG_VERSION" --no-git-tag-version --allow-same-version
+          fi
+        working-directory: packages/create-stellar-agentic
 
       - name: Prepare package files
         run: |
