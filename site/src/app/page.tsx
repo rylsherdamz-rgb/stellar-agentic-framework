@@ -409,7 +409,7 @@ export default function Home() {
             <a href="https://www.npmjs.com/package/create-stellar-agentic">npm</a>
             <a href="https://stellar.org">Stellar</a>
           </div>
-          <p>MIT License &middot; v0.1.9</p>
+          <p>MIT License &middot; v0.2.0</p>
         </div>
       </footer>
     </>
