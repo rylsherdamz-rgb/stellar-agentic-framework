@@ -99,10 +99,17 @@ Use this if you work in Claude Code and want AI-assisted development.
 ### Install
 
 ```bash
+# Claude Code
 npx skills add rylsherdamz-rgb/stellar-agentic-framework --agent claude-code
+
+# OpenCode
+npx skills add rylsherdamz-rgb/stellar-agentic-framework --agent opencode
+
+# Or install from the plugin marketplace (Claude Code only)
+/plugin marketplace add rylsherdamz-rgb/stellar-agentic-framework
 ```
 
-Then in any Claude Code session:
+Then in any session:
 
 > _"Build a token contract with a React frontend and x402 payments"_
 
