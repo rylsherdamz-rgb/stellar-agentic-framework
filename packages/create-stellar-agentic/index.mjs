@@ -75,17 +75,27 @@ async function runAsync(cmd, args, opts = {}) {
 }
 
 function startSpinner(msg) {
-  if (!IS_TTY) { console.log(`  ${msg}...`); return { stop: () => {} }; }
+  const stderr = process.stderr;
+  const tty = stderr.isTTY || (IS_TTY && process.stdout.isTTY);
+  if (!tty) {
+    let dots = 0;
+    process.stdout.write(`  ${msg}...`);
+    const td = setInterval(() => {
+      dots = (dots + 1) % 4;
+      process.stdout.write(`\r  ${msg}${".".repeat(dots)}   `);
+    }, 500);
+    return { stop: (ok = true) => { clearInterval(td); process.stdout.write(`\r  ${ok ? "✓" : "✗"} ${msg}   \n`); } };
+  }
   const frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
   let i = 0;
   const t = setInterval(() => {
-    process.stdout.write(`\r  ${color(frames[i], "cyan")} ${msg}...`);
+    stderr.write(`\r  ${frames[i]} ${msg}...`);
     i = (i + 1) % frames.length;
   }, 80);
   return {
     stop: (ok = true) => {
       clearInterval(t);
-      process.stdout.write(`\r  ${color(ok ? symbol("check") : symbol("cross"), ok ? "green" : "red")} ${msg}   \n`);
+      stderr.write(`\r  ${ok ? "✔" : "✘"} ${msg}   \n`);
     },
   };
 }
