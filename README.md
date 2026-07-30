@@ -92,7 +92,7 @@ The kernel never writes code. It routes, verifies, and steers. Six specialist ag
 
 ---
 
-## Option A: Claude Code Skill
+## Option A: Agent Skill
 
 Use this if you work in Claude Code and want AI-assisted development.
 
