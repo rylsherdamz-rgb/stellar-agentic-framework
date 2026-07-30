@@ -1,4 +1,23 @@
 <div align="center">
+
+  <svg width="48" height="48" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="16" cy="16" r="4.5" fill="#7c3aed"/>
+    <circle cx="4" cy="16" r="2" fill="#7c3aed" opacity="0.5"/>
+    <circle cx="16" cy="4" r="2" fill="#7c3aed" opacity="0.5"/>
+    <circle cx="28" cy="16" r="2" fill="#7c3aed" opacity="0.5"/>
+    <circle cx="16" cy="28" r="2" fill="#7c3aed" opacity="0.5"/>
+    <line x1="16" y1="4" x2="16" y2="11.5" stroke="#7c3aed" stroke-width="1.2" opacity="0.35"/>
+    <line x1="16" y1="20.5" x2="16" y2="28" stroke="#7c3aed" stroke-width="1.2" opacity="0.35"/>
+    <line x1="4" y1="16" x2="11.5" y2="16" stroke="#7c3aed" stroke-width="1.2" opacity="0.35"/>
+    <line x1="20.5" y1="16" x2="28" y2="16" stroke="#7c3aed" stroke-width="1.2" opacity="0.35"/>
+    <line x1="8.5" y1="8.5" x2="13.5" y2="13.5" stroke="#7c3aed" stroke-width="1" opacity="0.15"/>
+    <line x1="18.5" y1="18.5" x2="23.5" y2="23.5" stroke="#7c3aed" stroke-width="1" opacity="0.15"/>
+    <line x1="23.5" y1="8.5" x2="18.5" y2="13.5" stroke="#7c3aed" stroke-width="1" opacity="0.15"/>
+    <line x1="13.5" y1="18.5" x2="8.5" y2="23.5" stroke="#7c3aed" stroke-width="1" opacity="0.15"/>
+  </svg>
+
+  <br>
+
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/stellar-agentic--framework-7B3FE4?style=for-the-badge&logo=stellar&logoColor=white&labelColor=1a1a2e">
     <img alt="Stellar Agentic Framework" src="https://img.shields.io/badge/stellar-agentic--framework-7B3FE4?style=for-the-badge&logo=stellar&logoColor=white&labelColor=ffffff">
@@ -15,13 +34,17 @@
   <a href="https://www.npmjs.com/package/create-stellar-agentic">
     <img src="https://img.shields.io/npm/v/create-stellar-agentic?color=blue&logo=npm&label=cli">
   </a>
+  <a href="https://stellar-agentic-framework.vercel.app">
+    <img src="https://img.shields.io/badge/website-7B3FE4?logo=vercel&logoColor=white&label=docs">
+  </a>
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-green">
   </a>
 
   <br><br>
 
-  <p><b>Build Stellar dApps with AI agents that write, verify, and deploy code — no context-switching.</b></p>
+  <p><b>Build Stellar dApps with AI agents that write, verify, and deploy code — no context-switching.</b><br>
+  <a href="https://stellar-agentic-framework.vercel.app" style="color:#7c3aed;text-decoration:none;">stellar-agentic-framework.vercel.app</a></p>
 
   <table>
     <tr>
@@ -316,6 +339,7 @@ The template contracts target `soroban-sdk = "27.0.0-rc.1"`. Run `cargo update` 
 
 ## Related
 
+- [Documentation & Demo](https://stellar-agentic-framework.vercel.app)
 - [Stellar Documentation](https://developers.stellar.org/docs)
 - [Stellar Wallets Kit](https://github.com/Creit-Tech/Stellar-Wallets-Kit)
 - [Stellar Agentic Kit](https://github.com/stellar/stellar-agentic-kit)
@@ -324,5 +348,5 @@ The template contracts target `soroban-sdk = "27.0.0-rc.1"`. Run `cargo update` 
 ---
 
 <p align="center">
-  <sub>Built with the Stellar Agentic Framework · <a href="https://github.com/rylsherdamz-rgb/stellar-agentic-framework">GitHub</a> · <a href="https://www.npmjs.com/package/create-stellar-agentic">npm</a></sub>
+  <sub>Built with the Stellar Agentic Framework · <a href="https://stellar-agentic-framework.vercel.app">Website</a> · <a href="https://github.com/rylsherdamz-rgb/stellar-agentic-framework">GitHub</a> · <a href="https://www.npmjs.com/package/create-stellar-agentic">npm</a></sub>
 </p>
