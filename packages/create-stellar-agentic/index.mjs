@@ -59,6 +59,22 @@ function logItem(label, desc) {
   console.log(`    ${color(symbol("arrow"), "cyan")} ${color(label, "bold")}  ${desc}`);
 }
 
+function startSpinner(msg) {
+  if (!IS_TTY) { console.log(`  ${msg}...`); return { stop: () => {} }; }
+  const frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+  let i = 0;
+  const t = setInterval(() => {
+    process.stdout.write(`\r  ${color(frames[i], "cyan")} ${msg}...`);
+    i = (i + 1) % frames.length;
+  }, 80);
+  return {
+    stop: (ok = true) => {
+      clearInterval(t);
+      process.stdout.write(`\r  ${color(ok ? symbol("check") : symbol("cross"), ok ? "green" : "red")} ${msg}   \n`);
+    },
+  };
+}
+
 function ask(query) {
   return new Promise((resolve) => {
     const rl = createInterface({ input: process.stdin, output: process.stdout });
@@ -75,18 +91,23 @@ async function installDependencySkills() {
     logOk("All 10 skills already installed at ~/.claude/skills/");
     return;
   }
-  log("skills", `Installing ${missing.length} dependency skills to ~/.claude/skills/...`);
+  const sp3 = startSpinner(`Installing ${missing.length} dependency skills`);
+  const warnings = [];
   for (const name of missing) {
     const src = join(SKILLS_DIR, name);
     if (!existsSync(join(src, "SKILL.md"))) {
-      logWarn(`"${name}" skill not found in framework`);
+      warnings.push(name);
       continue;
     }
     const dest = join(skillBase, name);
     mkdirSync(dest, { recursive: true });
     copyDir(src, dest);
-    logOk(`${name} installed`);
   }
+  sp3.stop(true);
+  for (const name of missing) {
+    if (existsSync(join(SKILLS_DIR, name, "SKILL.md"))) logOk(`${name} installed`);
+  }
+  for (const name of warnings) logWarn(`"${name}" skill not found in framework`);
 }
 
 function copyDir(src, dest, filter = () => true) {
@@ -145,11 +166,14 @@ async function scaffoldTemplates(targetDir, types, skipPrompts) {
     ];
     if (skipPrompts) nextArgs.push("--yes");
 
+    const sp = startSpinner("Running create-next-app");
     try {
       const { execSync } = await import("child_process");
       execSync(`npx ${nextArgs.join(" ")}`, { stdio: "pipe", timeout: 120000 });
+      sp.stop(true);
       logOk("create-next-app scaffolded TypeScript project");
     } catch {
+      sp.stop(false);
       logWarn("create-next-app failed, copying template directly");
       copyDir(join(TEMPLATES_DIR, "frontend"), frontendDir, (p) => !p.endsWith("package-lock.json"));
     }
@@ -286,11 +310,12 @@ async function main() {
     if (existsSync(join(frontendDir, "package.json")) && !noInstall) {
       try {
         const { execSync } = await import("child_process");
-        log("npm", "Installing Stellar SDK, Wallets Kit, and Freighter API...", "yellow");
+        const sp2 = startSpinner("Installing Stellar packages");
         execSync(
           "npm install @stellar/stellar-sdk@^12.0.0 @creit.tech/stellar-wallets-kit@^1.0.0 @stellar/freighter-api@^2.0.0",
           { cwd: frontendDir, stdio: "pipe", timeout: 120000 }
         );
+        sp2.stop(true);
         logOk("Stellar packages installed");
       } catch {
         logWarn("npm install failed — run npm install manually in frontend/");
