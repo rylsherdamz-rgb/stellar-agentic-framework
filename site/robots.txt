@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://stellar-agentic-framework.vercel.app/sitemap.xml
