@@ -44,7 +44,9 @@ jobs:
           cp SKILL.md CLAUDE.md README.md .env.example .mcp.json packages/create-stellar-agentic/
 
       - name: Publish to npmjs.org
-        run: npm publish --provenance --access public
+        run: |
+          node -e "const p=require('./package.json'); p.name='create-stellar-agentic'; require('fs').writeFileSync('package.json', JSON.stringify(p,null,2)+'\n')"
+          npm publish --provenance --access public
         working-directory: packages/create-stellar-agentic
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -52,12 +54,11 @@ jobs:
       - name: Publish to GitHub Packages
         run: |
           cd packages/create-stellar-agentic
-          node << 'EOF'
-            const fs = require('fs');
-            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
-            pkg.name = '@rylsherdamz-rgb/create-stellar-agentic';
-            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
-          EOF
-          echo "@rylsherdamz-rgb:registry=https://npm.pkg.github.com" > .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
-          npm publish
+          node -e "
+            const p = require('./package.json');
+            p.name = '@rylsherdamz-rgb/create-stellar-agentic';
+            p.publishConfig = { registry: 'https://npm.pkg.github.com' };
+            require('fs').writeFileSync('package.json', JSON.stringify(p, null, 2) + '\n');
+          "
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > .npmrc
+          npm publish --registry=https://npm.pkg.github.com
