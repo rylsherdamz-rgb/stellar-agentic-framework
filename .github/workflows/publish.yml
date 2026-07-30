@@ -27,9 +27,12 @@ jobs:
 
       - name: Sync version from git tag
         run: |
-          TAG_VERSION="${GITHUB_REF_NAME#v}"
-          if [[ -n "$TAG_VERSION" ]]; then
-            npm version "$TAG_VERSION" --no-git-tag-version --allow-same-version
+          TAG="${GITHUB_REF_NAME#v}"
+          if [[ "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+            node -e "const p=require('./package.json'); p.version='$TAG'; require('fs').writeFileSync('package.json', JSON.stringify(p, null, 2)+'\n')"
+            echo "Version synced to $TAG"
+          else
+            echo "Not a version tag ($GITHUB_REF_NAME), skipping version sync"
           fi
         working-directory: packages/create-stellar-agentic
 
