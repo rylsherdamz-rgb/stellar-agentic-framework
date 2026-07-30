@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { existsSync, mkdirSync, cpSync, readdirSync, statSync, writeFileSync, readFileSync } from "fs";
-import { join, dirname, relative, basename } from "path";
+import { existsSync, mkdirSync, cpSync, readdirSync, statSync, writeFileSync } from "fs";
+import { join, dirname, basename } from "path";
 import { fileURLToPath } from "url";
 import { createInterface } from "readline";
 
@@ -154,23 +154,6 @@ async function scaffoldTemplates(targetDir, types, skipPrompts) {
       copyDir(join(TEMPLATES_DIR, "frontend"), frontendDir, (p) => !p.endsWith("package-lock.json"));
     }
 
-    // Ensure the template's package.json wins (Tailwind, Stellar packages, TypeScript)
-    const templatePkg = join(TEMPLATES_DIR, "frontend", "package.json");
-    if (existsSync(templatePkg)) {
-      copyFile(templatePkg, join(frontendDir, "package.json"));
-      logOk("package.json configured with Tailwind v4 + Stellar SDK + Wallets Kit");
-    }
-
-    // Copy Tailwind v4 CSS setup if not present
-    const cssPath = join(frontendDir, "src/app/globals.css");
-    const twCss = `@import "tailwindcss";`;
-    if (existsSync(cssPath)) {
-      const css = readFileSync(cssPath, "utf-8");
-      if (!css.includes("tailwindcss")) {
-        writeFileSync(cssPath, twCss + "\n\n" + css);
-      }
-    }
-
     copyDir(join(TEMPLATES_DIR, "frontend/hooks"), join(frontendDir, "src/hooks"));
     copyDir(join(TEMPLATES_DIR, "frontend/components"), join(frontendDir, "src/components"));
     copyDir(join(TEMPLATES_DIR, "frontend/providers"), join(frontendDir, "src/providers"));
@@ -305,7 +288,7 @@ async function main() {
         const { execSync } = await import("child_process");
         log("npm", "Installing Stellar SDK, Wallets Kit, and Freighter API...", "yellow");
         execSync(
-          "npm install @stellar/stellar-sdk@^12.0.0 @creit.tech/stellar-wallets-kit@^1.0.0 @stellar/freighter-api@^2.0.0 tailwindcss@^4.0.0 @tailwindcss/postcss@^4.0.0",
+          "npm install @stellar/stellar-sdk@^12.0.0 @creit.tech/stellar-wallets-kit@^1.0.0 @stellar/freighter-api@^2.0.0",
           { cwd: frontendDir, stdio: "pipe", timeout: 120000 }
         );
         logOk("Stellar packages installed");
