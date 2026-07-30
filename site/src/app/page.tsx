@@ -38,12 +38,12 @@ const agents = [
   { handle: "@stellar-zk", role: "Zero-knowledge integration engineer", skills: ["Groth16", "Circom", "Noir"] },
 ];
 
-function CopyButton({ getText }: { getText: () => string }) {
+function CopyButton({ getText, children, className = "" }: { getText: () => string; children?: React.ReactNode; className?: string }) {
   const [copied, setCopied] = useState(false);
   return (
-    <button className="copy-btn" onClick={() => { navigator.clipboard.writeText(getText()); setCopied(true); setTimeout(() => setCopied(false), 1800); }}>
+    <button className={`copy-btn ${className}`} onClick={() => { navigator.clipboard.writeText(getText()); setCopied(true); setTimeout(() => setCopied(false), 1800); }}>
       {copied ? <Check size={13} /> : <Copy size={13} />}
-      {copied ? "Copied" : "Copy"}
+      {copied ? "Copied" : (children || "Copy")}
     </button>
   );
 }
@@ -155,8 +155,11 @@ export default function Home() {
           <h1><span>Build Stellar dApps</span><br />with AI Agents</h1>
           <p>An eval-driven, multi-agent coding harness that routes tasks to specialist agents, verifies outputs against structured evals, and produces production-grade Stellar dApps.</p>
           <div className="hero-actions">
-            <a href="https://www.npmjs.com/package/create-stellar-agentic" className="btn btn-primary">npx create-stellar-agentic</a>
-            <a href="https://github.com/rylsherdamz-rgb/stellar-agentic-framework" className="btn btn-secondary">View on GitHub &rarr;</a>
+            <CopyButton getText={() => "npx create-stellar-agentic"} className="btn btn-primary btn-copy">
+              npx create-stellar-agentic
+            </CopyButton>
+            <a href="https://www.npmjs.com/package/create-stellar-agentic" className="btn btn-secondary">View on npm &rarr;</a>
+            <a href="https://github.com/rylsherdamz-rgb/stellar-agentic-framework" className="btn btn-secondary">GitHub</a>
           </div>
           <div className="terminal-window">
             <div className="terminal-bar">

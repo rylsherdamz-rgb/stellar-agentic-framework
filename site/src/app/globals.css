@@ -78,6 +78,8 @@ nav .links a:hover { color: var(--text); }
 }
 .btn-primary { background: var(--accent); color: white; }
 .btn-primary:hover { background: #6d28d9; transform: translateY(-2px); box-shadow: 0 12px 32px var(--accent-glow); }
+.btn-copy { background: var(--accent); color: white; border: none; cursor: pointer; font-family: inherit; padding: 13px 28px; border-radius: var(--radius); font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; transition: all .25s; }
+.btn-copy:hover { background: #6d28d9; transform: translateY(-2px); box-shadow: 0 12px 32px var(--accent-glow); }
 .btn-secondary { border: 1px solid var(--border); color: var(--text); background: var(--surface); }
 .btn-secondary:hover { border-color: var(--border-hover); transform: translateY(-2px); }
 
