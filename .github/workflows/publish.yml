@@ -1,0 +1,33 @@
+name: Publish
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  publish-cli:
+    name: Publish create-stellar-agentic to npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Prepare package files
+        run: |
+          for dir in templates skills agents evals data scripts .claude .claude-plugin; do
+            cp -r "$dir" packages/create-stellar-agentic/
+          done
+          cp SKILL.md CLAUDE.md README.md .env.example .mcp.json packages/create-stellar-agentic/
+
+      - name: Publish to npm
+        run: npm publish --provenance --access public
+        working-directory: packages/create-stellar-agentic

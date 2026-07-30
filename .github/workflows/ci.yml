@@ -90,26 +90,3 @@ jobs:
         with:
           node-version: 20
       - run: npm run validate
-
-  publish-cli:
-    name: Publish CLI to npm
-    needs: [validate, lint]
-    if: github.event_name == 'release'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          registry-url: https://registry.npmjs.org
-      - run: npm ci
-      - name: Prepare package files
-        run: |
-          for dir in templates skills agents evals data scripts .claude; do
-            cp -r "$dir" packages/create-stellar-agentic/
-          done
-          cp SKILL.md CLAUDE.md README.md .env.example .mcp.json packages/create-stellar-agentic/
-      - run: npm publish --access public
-        working-directory: packages/create-stellar-agentic
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
