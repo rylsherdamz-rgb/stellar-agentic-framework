@@ -1,20 +1,6 @@
 <div align="center">
 
-  <svg width="48" height="48" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="16" cy="16" r="4.5" fill="#7c3aed"/>
-    <circle cx="4" cy="16" r="2" fill="#7c3aed" opacity="0.5"/>
-    <circle cx="16" cy="4" r="2" fill="#7c3aed" opacity="0.5"/>
-    <circle cx="28" cy="16" r="2" fill="#7c3aed" opacity="0.5"/>
-    <circle cx="16" cy="28" r="2" fill="#7c3aed" opacity="0.5"/>
-    <line x1="16" y1="4" x2="16" y2="11.5" stroke="#7c3aed" stroke-width="1.2" opacity="0.35"/>
-    <line x1="16" y1="20.5" x2="16" y2="28" stroke="#7c3aed" stroke-width="1.2" opacity="0.35"/>
-    <line x1="4" y1="16" x2="11.5" y2="16" stroke="#7c3aed" stroke-width="1.2" opacity="0.35"/>
-    <line x1="20.5" y1="16" x2="28" y2="16" stroke="#7c3aed" stroke-width="1.2" opacity="0.35"/>
-    <line x1="8.5" y1="8.5" x2="13.5" y2="13.5" stroke="#7c3aed" stroke-width="1" opacity="0.15"/>
-    <line x1="18.5" y1="18.5" x2="23.5" y2="23.5" stroke="#7c3aed" stroke-width="1" opacity="0.15"/>
-    <line x1="23.5" y1="8.5" x2="18.5" y2="13.5" stroke="#7c3aed" stroke-width="1" opacity="0.15"/>
-    <line x1="13.5" y1="18.5" x2="8.5" y2="23.5" stroke="#7c3aed" stroke-width="1" opacity="0.15"/>
-  </svg>
+  <img src="https://stellar-agentic-framework.vercel.app/favicon.svg" width="48" height="48" alt="Stellar Agentic Framework">
 
   <br>
 
