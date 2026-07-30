@@ -66,6 +66,26 @@ function useSectionAnim(ref: React.RefObject<HTMLDivElement | null>, cardSel: st
   }, []);
 }
 
+function Logomark({ size = 24 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+      <circle cx="12" cy="12" r="3.5" fill="#7c3aed" />
+      <circle cx="3" cy="12" r="1.5" fill="#7c3aed" opacity="0.5" />
+      <circle cx="12" cy="3" r="1.5" fill="#7c3aed" opacity="0.5" />
+      <circle cx="21" cy="12" r="1.5" fill="#7c3aed" opacity="0.5" />
+      <circle cx="12" cy="21" r="1.5" fill="#7c3aed" opacity="0.5" />
+      <line x1="12" y1="3" x2="12" y2="8.5" stroke="#7c3aed" strokeWidth="1" opacity="0.35" />
+      <line x1="12" y1="15.5" x2="12" y2="21" stroke="#7c3aed" strokeWidth="1" opacity="0.35" />
+      <line x1="3" y1="12" x2="8.5" y2="12" stroke="#7c3aed" strokeWidth="1" opacity="0.35" />
+      <line x1="15.5" y1="12" x2="21" y2="12" stroke="#7c3aed" strokeWidth="1" opacity="0.35" />
+      <line x1="6.1" y1="6.1" x2="9.9" y2="9.9" stroke="#7c3aed" strokeWidth="1" opacity="0.2" />
+      <line x1="14.1" y1="14.1" x2="17.9" y2="17.9" stroke="#7c3aed" strokeWidth="1" opacity="0.2" />
+      <line x1="17.9" y1="6.1" x2="14.1" y2="9.9" stroke="#7c3aed" strokeWidth="1" opacity="0.2" />
+      <line x1="9.9" y1="14.1" x2="6.1" y2="17.9" stroke="#7c3aed" strokeWidth="1" opacity="0.2" />
+    </svg>
+  );
+}
+
 export default function Home() {
   const heroRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
@@ -117,7 +137,7 @@ export default function Home() {
     <>
       <nav>
         <div className="container">
-          <a href="/" className="logo">Stellar <em>Agentic</em></a>
+          <a href="/" className="logo"><Logomark size={22} /> Stellar <em>Agentic</em> <span className="logo-suffix">Framework</span></a>
           <div className="links">
             <a href="#features">Features</a>
             <a href="#agents">Agents</a>

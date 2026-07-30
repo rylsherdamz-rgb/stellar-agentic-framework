@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     description: "Build Stellar dApps with AI agents that write, verify, and deploy code.",
   },
   robots: { index: true, follow: true },
+  icons: { icon: "/favicon.svg" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
