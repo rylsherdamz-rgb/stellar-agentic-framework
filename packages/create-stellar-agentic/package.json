@@ -1,7 +1,7 @@
 {
   "name": "create-stellar-agentic",
   "version": "0.1.9",
-  "description": "Scaffold a Stellar dApp with the Stellar Agentic Framework — contracts, frontend, backend, and agentic payments in one command",
+  "description": "Eval-driven agentic harness for building production Stellar dApps. 6 specialist agents, 5 eval definitions, full contract/frontend/backend templates, and npx CLI scaffolding with npx skill support. https://stellar-agentic-framework.vercel.app",
   "type": "module",
   "bin": {
     "create-stellar-agentic": "index.mjs",
@@ -25,7 +25,7 @@
     "opencode",
     "create-stellar-app"
   ],
-  "homepage": "https://www.npmjs.com/package/create-stellar-agentic",
+  "homepage": "https://stellar-agentic-framework.vercel.app",
   "bugs": {
     "url": "https://github.com/rylsherdamz-rgb/stellar-agentic-framework/issues"
   },
