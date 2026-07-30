@@ -13,7 +13,7 @@
     <img src="https://img.shields.io/github/actions/workflow/status/rylsherdamz-rgb/stellar-agentic-framework/ci.yml?branch=master&label=ci&logo=github">
   </a>
   <a href="https://www.npmjs.com/package/create-stellar-agentic">
-    <img src="https://img.shields.io/npm/v/create-stellar-agentic?color=44cc11&logo=npm&label=cli">
+    <img src="https://img.shields.io/npm/v/create-stellar-agentic?color=blue&logo=npm&label=cli">
   </a>
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-green">
