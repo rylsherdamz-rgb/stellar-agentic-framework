@@ -22,7 +22,6 @@ body {
 }
 ::selection { background: var(--accent); color: #fff; }
 .container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
-
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   background: rgba(10,10,15,0.8); backdrop-filter: blur(16px);
@@ -40,7 +39,6 @@ nav .links a:hover { color: var(--text); }
   font-weight: 600; font-size: 0.85rem; text-decoration: none; transition: all .2s;
 }
 .nav-cta:hover { background: #8f55f0; transform: translateY(-1px); }
-
 .hero {
   padding: 160px 0 100px; text-align: center; position: relative; overflow: hidden;
 }
@@ -82,8 +80,6 @@ nav .links a:hover { color: var(--text); }
   box-shadow: 0 4px 24px rgba(0,0,0,0.4);
 }
 .hero-cmd .prompt { color: var(--accent2); }
-.hero-cmd .cmd { color: var(--text); }
-
 section { padding: 100px 0; }
 .section-label {
   display: inline-block; color: var(--accent); font-size: 0.85rem; font-weight: 600;
@@ -91,7 +87,6 @@ section { padding: 100px 0; }
 }
 .section-title { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 700; margin-bottom: 16px; }
 .section-sub { color: var(--text-dim); font-size: clamp(0.9rem, 1.5vw, 1.05rem); max-width: 560px; margin-bottom: 56px; }
-
 .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
 .feature-card {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
@@ -107,7 +102,6 @@ section { padding: 100px 0; }
   opacity: 0; transition: opacity .3s;
 }
 .feature-card:hover::after { opacity: 1; }
-
 .code-block {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
   padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
@@ -116,7 +110,6 @@ section { padding: 100px 0; }
 .code-block .comment { color: #6a6a8a; }
 .code-block .kw { color: var(--accent); }
 .code-block .str { color: var(--accent2); }
-
 .agents-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
 .agent-card {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
@@ -129,9 +122,8 @@ section { padding: 100px 0; }
 .agent-card .skills span {
   background: rgba(123,63,228,0.12); color: var(--accent); font-size: 0.75rem; padding: 4px 10px; border-radius: 6px;
 }
-
-.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; counter-reset: step; }
-.step { counter-increment: step; text-align: center; padding: 32px 20px; }
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
+.step { text-align: center; padding: 32px 20px; }
 .step .num {
   width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: #fff;
   display: flex; align-items: center; justify-content: center; font-weight: 700;
@@ -139,22 +131,18 @@ section { padding: 100px 0; }
 }
 .step h4 { font-size: 1.05rem; font-weight: 600; margin-bottom: 8px; }
 .step p { color: var(--text-dim); font-size: 0.9rem; }
-
 .arch-diagram {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
   padding: 40px; text-align: center; font-family: 'JetBrains Mono', monospace;
   font-size: clamp(0.6rem, 1.2vw, 0.8rem); line-height: 1.8; overflow-x: auto; white-space: pre;
 }
-
 footer { border-top: 1px solid var(--border); padding: 48px 0; text-align: center; color: var(--text-dim); font-size: 0.85rem; }
 footer a { color: var(--accent); text-decoration: none; }
 footer a:hover { text-decoration: underline; }
 footer .links { margin-bottom: 12px; }
 footer .links a { margin: 0 12px; }
-
 .fade-in { opacity: 0; transform: translateY(24px); transition: all .6s ease-out; }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
-
 @media (max-width: 768px) {
   nav .links { gap: 12px; }
   nav .links a { font-size: 0.8rem; }
