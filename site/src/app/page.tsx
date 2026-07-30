@@ -1,6 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Box, Layout, Server, CreditCard, ShieldCheck, GitBranch, ArrowRight, ChevronDown } from "lucide-react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const terminalScript = [
   { type: "cmd", text: "npx create-stellar-agentic my-dapp" },
@@ -11,19 +16,18 @@ const terminalScript = [
   { type: "output", text: "  ok  frontend/src/app/layout.tsx", delay: 160 },
   { type: "output", text: "  ok  frontend/stellar-wallets-kit.tsx", delay: 200 },
   { type: "output", text: "  ok  backend/src/index.ts", delay: 180 },
-  { type: "output", text: "  ok  docker-compose.yml", delay: 140 },
   { type: "output", text: "", delay: 300 },
   { type: "cmd", text: "npm run dev" },
   { type: "output", text: "  Stellar Agentic dApp running on http://localhost:3000", delay: 500 },
 ];
 
 const features = [
-  { title: "Smart Contracts", desc: "Scaffold Rust/Soroban contracts with build, test, and deploy workflows — all from a single command." },
-  { title: "dApp Frontends", desc: "Generate Next.js apps pre-integrated with Stellar Wallets Kit. Connect, sign, and transact instantly." },
-  { title: "Backend APIs", desc: "Build API servers and indexers that query Stellar RPC and Horizon. Ship production-grade data pipelines." },
-  { title: "x402 Payments", desc: "Monetize APIs with HTTP 402 + Stellar USDC. Machine-to-machine payments out of the box." },
-  { title: "Zero-Knowledge Proofs", desc: "Integrate Groth16, Circom, and Noir verifiers into Stellar contracts. Privacy-first dApps." },
-  { title: "Eval-Driven", desc: "Every output is verified against structured eval criteria. Max 3 retry steers. No broken code ships." },
+  { icon: Box, title: "Smart Contracts", desc: "Scaffold Rust/Soroban contracts with build, test, and deploy workflows." },
+  { icon: Layout, title: "dApp Frontends", desc: "Generate Next.js apps pre-integrated with Stellar Wallets Kit." },
+  { icon: Server, title: "Backend APIs", desc: "Build API servers and indexers that query Stellar RPC and Horizon." },
+  { icon: CreditCard, title: "x402 Payments", desc: "Monetize APIs with HTTP 402 and Stellar USDC. Machine-to-machine payments." },
+  { icon: ShieldCheck, title: "Zero-Knowledge Proofs", desc: "Integrate Groth16, Circom, and Noir verifiers into Stellar contracts." },
+  { icon: GitBranch, title: "Eval-Driven", desc: "Every output verified against structured eval criteria with max 3 retry steers." },
 ];
 
 const agents = [
@@ -34,43 +38,102 @@ const agents = [
   { handle: "@stellar-zk", role: "Zero-knowledge integration engineer", skills: ["Groth16", "Circom", "Noir"] },
 ];
 
-function Index({ n }: { n: number }) {
-  return (
-    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.7rem", color: "var(--text-muted)", marginBottom: "12px", display: "block" }}>
-      {String(n).padStart(2, "0")}
-    </span>
-  );
-}
-
 export default function Home() {
-  const observerRef = useRef<IntersectionObserver | null>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
+  const featuresRef = useRef<HTMLDivElement>(null);
+  const agentsRef = useRef<HTMLDivElement>(null);
+  const usageRef = useRef<HTMLDivElement>(null);
+  const archRef = useRef<HTMLDivElement>(null);
   const [lineIdx, setLineIdx] = useState(0);
   const [showCursor, setShowCursor] = useState(true);
-
-  useEffect(() => {
-    observerRef.current = new IntersectionObserver(
-      (entries) => entries.forEach((e) => e.target.classList.toggle("visible", e.isIntersecting)),
-      { threshold: 0.1 }
-    );
-    document.querySelectorAll(".fade-in").forEach((el) => observerRef.current?.observe(el));
-    return () => observerRef.current?.disconnect();
-  }, []);
 
   useEffect(() => {
     if (lineIdx >= terminalScript.length) return;
     const line = terminalScript[lineIdx];
     const delay = line.type === "cmd" ? 400 : (line.delay || 100);
-    if (line.type === "output" && line.text === "") {
-      const t = setTimeout(() => setLineIdx((i) => i + 1), 200);
-      return () => clearTimeout(t);
-    }
-    const t = setTimeout(() => setLineIdx((i) => i + 1), delay);
+    const t = setTimeout(() => setLineIdx((i) => i + 1), line.type === "output" && line.text === "" ? 200 : delay);
     return () => clearTimeout(t);
   }, [lineIdx]);
 
   useEffect(() => {
     setShowCursor(lineIdx < terminalScript.length);
   }, [lineIdx]);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    const glow = glowRef.current;
+    if (!hero || !glow) return;
+
+    gsap.fromTo(hero.querySelector("h1"), { autoAlpha: 0, y: 30 },
+      { autoAlpha: 1, y: 0, duration: 0.8, ease: "power3.out" });
+    gsap.fromTo(hero.querySelector("p"), { autoAlpha: 0, y: 20 },
+      { autoAlpha: 1, y: 0, duration: 0.7, ease: "power3.out", delay: 0.2 });
+    gsap.fromTo(hero.querySelector(".hero-actions"), { autoAlpha: 0, y: 15 },
+      { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out", delay: 0.4 });
+
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: hero,
+        start: "top top",
+        end: "bottom top",
+        onUpdate: (self) => {
+          gsap.set(glow, { y: self.progress * 80, scale: 1 + self.progress * 0.15, opacity: 1 - self.progress * 0.4 });
+        },
+      });
+    }, hero);
+    return () => ctx.revert();
+  }, []);
+
+  function useSectionAnim(ref: React.RefObject<HTMLDivElement | null>, cardSel: string, opts?: { stagger?: number; from?: gsap.TweenVars }) {
+    useEffect(() => {
+      const el = ref.current;
+      if (!el) return;
+      const cards = el.querySelectorAll(cardSel);
+      const label = el.querySelector(".section-label")!;
+      const title = el.querySelector(".section-title")!;
+      const sub = el.querySelector(".section-sub");
+      const ctx = gsap.context(() => {
+        gsap.fromTo(label, { autoAlpha: 0, y: 15 },
+          { autoAlpha: 1, y: 0, duration: 0.4, ease: "power2.out",
+            scrollTrigger: { trigger: el, start: "top 87%" } });
+        gsap.fromTo(title, { autoAlpha: 0, y: 15 },
+          { autoAlpha: 1, y: 0, duration: 0.4, ease: "power2.out",
+            scrollTrigger: { trigger: el, start: "top 87%" } });
+        if (sub) {
+          gsap.fromTo(sub, { autoAlpha: 0, y: 15 },
+            { autoAlpha: 1, y: 0, duration: 0.4, ease: "power2.out",
+              scrollTrigger: { trigger: el, start: "top 87%" } });
+        }
+        gsap.fromTo(cards, { autoAlpha: 0, y: 20, ...(opts?.from || {}) },
+          { autoAlpha: 1, y: 0, ...(opts?.from ? {} : {}), duration: 0.45, stagger: opts?.stagger || 0.07, ease: "back.out(1.3)",
+            scrollTrigger: { trigger: el, start: "top 82%" } });
+      });
+      return () => ctx.revert();
+    }, []);
+  }
+
+  useSectionAnim(featuresRef, ".feature-card", { stagger: 0.07 });
+  useSectionAnim(agentsRef, ".agent-card", { stagger: 0.06, from: { scale: 0.95 } });
+  useSectionAnim(usageRef, ".step", { stagger: 0.1, from: { x: -20 } });
+
+  useEffect(() => {
+    const el = archRef.current;
+    if (!el) return;
+    const cards = el.querySelectorAll(".arch-card");
+    const lines = el.querySelectorAll(".arch-line");
+    const ctx = gsap.context(() => {
+      gsap.fromTo(cards, { autoAlpha: 0, y: 15 },
+        { autoAlpha: 1, y: 0, duration: 0.45, stagger: 0.1, ease: "back.out(1.2)",
+          scrollTrigger: { trigger: el, start: "top 82%" } });
+      lines.forEach((line, i) => {
+        gsap.fromTo(line, { autoAlpha: 0, scaleX: 0, scaleY: 0 },
+          { autoAlpha: 1, scaleX: 1, scaleY: 1, duration: 0.3, delay: 0.5 + i * 0.1, ease: "power2.out",
+            scrollTrigger: { trigger: el, start: "top 82%" } });
+      });
+    });
+    return () => ctx.revert();
+  }, []);
 
   return (
     <>
@@ -88,8 +151,8 @@ export default function Home() {
         </div>
       </nav>
 
-      <section className="hero">
-        <div className="hero-glow" />
+      <section className="hero" ref={heroRef}>
+        <div className="hero-glow" ref={glowRef} />
         <div className="container">
           <h1>Build Stellar dApps with AI Agents</h1>
           <p>
@@ -104,7 +167,6 @@ export default function Home() {
               View on GitHub &rarr;
             </a>
           </div>
-
           <div className="terminal-window">
             <div className="terminal-bar">
               <span className="terminal-dot" />
@@ -116,13 +178,8 @@ export default function Home() {
               {terminalScript.slice(0, lineIdx).map((line, i) => (
                 <div key={i} className="terminal-line visible">
                   {line.type === "cmd" ? (
-                    <>
-                      <span className="terminal-prompt">$ </span>
-                      <span className="terminal-cmd">{line.text}</span>
-                    </>
-                  ) : line.text === "" ? (
-                    <br />
-                  ) : (
+                    <><span className="terminal-prompt">$ </span><span className="terminal-cmd">{line.text}</span></>
+                  ) : line.text === "" ? <br /> : (
                     <span className="terminal-output">
                       <span className="ok">ok  </span>
                       {line.text.replace("  ok  ", "")}
@@ -141,35 +198,34 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="features">
+      <section id="features" ref={featuresRef}>
         <div className="container">
-          <div className="fade-in">
-            <span className="section-label">Features</span>
-            <h2 className="section-title">Everything you need to ship on Stellar</h2>
-            <p className="section-sub">Six specialist agents, zero boilerplate. From contract to deployment in minutes.</p>
-          </div>
+          <span className="section-label">Features</span>
+          <h2 className="section-title">Everything you need to ship on Stellar</h2>
+          <p className="section-sub">Six specialist agents, zero boilerplate. From contract to deployment in minutes.</p>
           <div className="features-grid">
-            {features.map((f, i) => (
-              <div key={i} className="feature-card fade-in">
-                <Index n={i + 1} />
-                <h3>{f.title}</h3>
-                <p>{f.desc}</p>
-              </div>
-            ))}
+            {features.map((f, i) => {
+              const Icon = f.icon;
+              return (
+                <div key={i} className="feature-card">
+                  <div className="feature-icon"><Icon size={18} /></div>
+                  <h3>{f.title}</h3>
+                  <p>{f.desc}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      <section id="agents" style={{ background: "var(--surface)" }}>
+      <section id="agents" className="section-alt" ref={agentsRef}>
         <div className="container">
-          <div className="fade-in">
-            <span className="section-label">Agent Registry</span>
-            <h2 className="section-title">Specialist agents at your command</h2>
-            <p className="section-sub">Each agent is loaded with domain-specific skills and eval criteria. Describe what you want — the harness routes it to the right agent.</p>
-          </div>
+          <span className="section-label">Agent Registry</span>
+          <h2 className="section-title">Specialist agents at your command</h2>
+          <p className="section-sub">Each agent is loaded with domain-specific skills and eval criteria.</p>
           <div className="agents-grid">
             {agents.map((a, i) => (
-              <div key={i} className="agent-card fade-in">
+              <div key={i} className="agent-card">
                 <div className="handle">{a.handle}</div>
                 <div className="role">{a.role}</div>
                 <div className="skills">
@@ -181,73 +237,78 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="usage">
+      <section id="usage" ref={usageRef}>
         <div className="container">
-          <div className="fade-in">
-            <span className="section-label">Quick Start</span>
-            <h2 className="section-title">Ship in 3 steps</h2>
-            <p className="section-sub">From empty directory to deployed dApp — the harness handles the routing, verification, and knowledge graphing.</p>
-          </div>
+          <span className="section-label">Quick Start</span>
+          <h2 className="section-title">Ship in 3 steps</h2>
+          <p className="section-sub">From empty directory to deployed dApp.</p>
           <div className="steps">
-            <div className="step fade-in">
+            <div className="step">
               <span className="num">01</span>
               <h4>Scaffold</h4>
-              <p><code>npx create-stellar-agentic my-dapp</code> — generates your project with contracts, frontend, and agent config.</p>
+              <p><code>npx create-stellar-agentic my-dapp</code> generates your project.</p>
             </div>
-            <div className="step fade-in">
+            <div className="step">
               <span className="num">02</span>
               <h4>Describe</h4>
-              <p>Tell the harness what you want: a token, a swap, an NFT marketplace, a payment API. It routes to the right agent.</p>
+              <p>Tell the harness what you want: a token, a swap, a marketplace, a payment API.</p>
             </div>
-            <div className="step fade-in">
+            <div className="step">
               <span className="num">03</span>
               <h4>Ship</h4>
-              <p>Agents write, eval-verify, and iterate code. You get production-grade Stellar dApps with zero manual wiring.</p>
+              <p>Agents write, eval-verify, and iterate. Production dApps with zero manual wiring.</p>
             </div>
           </div>
-          <div className="fade-in" style={{ marginTop: "48px" }}>
-            <h3 style={{ marginBottom: "14px", fontSize: "1rem", fontWeight: 600 }}>Example: Scaffold a token contract</h3>
-            <div className="code-block">
-              <span className="comment"># Create a new project</span><br />
-              npx create-stellar-agentic my-token-dapp<br /><br />
-              <span className="comment"># Inside the harness, describe your contract</span><br />
-              <span className="keyword">@stellar-contracts</span> create a SAC-compatible token<br />
-              with mint, burn, and transfer operations<br /><br />
-              <span className="comment"># Agent writes the contract, evals verify it</span><br />
-              <span className="ok">ok</span>  Contract compiles<br />
-              <span className="ok">ok</span>  Tests pass<br />
-              <span className="ok">ok</span>  Eval criteria met
-            </div>
+          <div className="code-block" style={{ marginTop: "48px" }}>
+            <span className="comment"># Create a new project</span><br />
+            npx create-stellar-agentic my-token-dapp<br /><br />
+            <span className="comment"># Inside the harness, describe your contract</span><br />
+            <span className="keyword">@stellar-contracts</span> create a SAC-compatible token<br />
+            with mint, burn, and transfer operations<br /><br />
+            <span className="comment"># Agent writes the contract, evals verify it</span><br />
+            <span className="ok">ok</span>  Contract compiles<br />
+            <span className="ok">ok</span>  Tests pass<br />
+            <span className="ok">ok</span>  Eval criteria met
           </div>
         </div>
       </section>
 
-      <section id="architecture" style={{ background: "var(--surface)" }}>
+      <section id="architecture" className="section-alt" ref={archRef}>
         <div className="container">
-          <div className="fade-in">
-            <span className="section-label">Architecture</span>
-            <h2 className="section-title">How it works</h2>
-            <p className="section-sub">The Stellar Coding Harness orchestrates agents through a structured pipeline of routing, verification, and knowledge graphing.</p>
-          </div>
-          <div className="arch-diagram fade-in">
-            ┌─────────────────────────────────────────────────┐
-            │           Stellar Coding Harness                │
-            │  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
-            │  │  Skills  │  │ Agents   │  │  Evals   │     │
-            │  │   Load   │→ │  Route   │→ │  Verify  │──┐  │
-            │  └──────────┘  └──────────┘  └──────────┘  │  │
-            │                                             │  │
-            │  ┌──────────────────────────────────────┐    │  │
-            │  │         Knowledge Graph              │◄───┘  │
-            │  │   (graphify-out/ — every project)    │       │
-            │  └──────────────────────────────────────┘       │
-            └─────────────────────────────────────────────────┘
-                               │
-          ┌────────────────────┼────────────────────┐
-          │                    │                    │
-          ▼                    ▼                    ▼
-        Contract             Frontend            Backend
-        (Rust/WASM)          (Next.js)           (API/Indexer)
+          <span className="section-label">Architecture</span>
+          <h2 className="section-title">How it works</h2>
+          <p className="section-sub">A pipeline of skills, routing, verification, and knowledge graphing — all orchestrated by the harness.</p>
+          <div className="arch-diagram">
+            <div className="arch-box arch-harness">
+              <div className="arch-box-label">Stellar Coding Harness</div>
+              <div className="arch-row">
+                <div className="arch-card"><div className="arch-card-title">Skills</div><div className="arch-card-sub">load</div></div>
+                <div className="arch-arrow"><ArrowRight size={14} /></div>
+                <div className="arch-card"><div className="arch-card-title">Agent Router</div><div className="arch-card-sub">route</div></div>
+                <div className="arch-arrow"><ArrowRight size={14} /></div>
+                <div className="arch-card"><div className="arch-card-title">Evals</div><div className="arch-card-sub">verify</div></div>
+              </div>
+              <div className="arch-connector-v">
+                <ChevronDown size={14} />
+              </div>
+              <div className="arch-row arch-single">
+                <div className="arch-card arch-card-green">
+                  <div className="arch-card-title">Knowledge Graph</div>
+                  <div className="arch-card-sub">graphify-out/ &mdash; query &middot; path &middot; explain</div>
+                </div>
+              </div>
+            </div>
+            <div className="arch-connector-v arch-connector-out">
+              <ChevronDown size={14} />
+            </div>
+            <div className="arch-box arch-output">
+              <div className="arch-box-label">Output</div>
+              <div className="arch-row">
+                <div className="arch-card"><div className="arch-card-title">Contract</div><div className="arch-card-sub">Rust / WASM</div></div>
+                <div className="arch-card"><div className="arch-card-title">Frontend</div><div className="arch-card-sub">Next.js / Wallets Kit</div></div>
+                <div className="arch-card"><div className="arch-card-title">Backend</div><div className="arch-card-sub">API / Indexer</div></div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
