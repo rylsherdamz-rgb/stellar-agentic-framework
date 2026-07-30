@@ -6,7 +6,6 @@ import { fileURLToPath } from "url";
 import { createInterface } from "readline";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-// Published: files are alongside index.mjs. Local dev: files are 2 dirs up at repo root.
 const PKG_ROOT = existsSync(join(__dirname, "templates"))
   ? __dirname
   : join(__dirname, "../..");
@@ -21,34 +20,73 @@ const REQUIRED_SKILLS = [
 
 const IS_TTY = process.stdout.isTTY;
 
+const BANNER = `
+  ╭─────────────────────────────────────────────────╮
+  │  ✦ Stellar Agentic Framework ✦                  │
+  │  Eval-driven multi-agent harness for Stellar dApps│
+  ╰─────────────────────────────────────────────────╯
+`;
+
+function color(s, c) {
+  if (!IS_TTY) return s;
+  const codes = { green: 32, cyan: 36, yellow: 33, red: 31, dim: 2, bold: 1 };
+  return `\x1b[${codes[c] || 0}m${s}\x1b[0m`;
+}
+
+function symbol(name) {
+  if (!IS_TTY) return { check: "✓", cross: "✗", arrow: "→", dot: "•", star: "*" }[name] || name;
+  return { check: "✔", cross: "✘", arrow: "➜", dot: "●", star: "✦" }[name] || name;
+}
+
+function log(label, msg, labelColor = "cyan") {
+  console.log(`  ${color(symbol("dot"), labelColor)} ${color(label + ":", "bold")} ${msg}`);
+}
+
+function logStep(step, total, msg) {
+  console.log(`\n  ${color(`[${step}/${total}]`, "dim")} ${color(msg, "bold")}`);
+  console.log();
+}
+
+function logOk(msg) {
+  console.log(`    ${color(symbol("check"), "green")} ${msg}`);
+}
+
+function logWarn(msg) {
+  console.log(`    ${color(symbol("dot"), "yellow")} ${color(msg, "yellow")}`);
+}
+
+function logItem(label, desc) {
+  console.log(`    ${color(symbol("arrow"), "cyan")} ${color(label, "bold")}  ${desc}`);
+}
+
 function ask(query) {
   return new Promise((resolve) => {
     const rl = createInterface({ input: process.stdin, output: process.stdout });
-    rl.question(query, (answer) => { rl.close(); resolve(answer.trim()); });
+    rl.question(`  ${color("?", "yellow")} ${query} `, (answer) => { rl.close(); resolve(answer.trim()); });
   });
 }
 
 async function installDependencySkills() {
   const homeDir = process.env.HOME || process.env.USERPROFILE;
-  if (!homeDir) { console.log("  ⚠ Cannot determine home dir — skipping skill install"); return; }
+  if (!homeDir) { logWarn("Cannot determine home dir, skipping skill install"); return; }
   const skillBase = join(homeDir, ".claude", "skills");
   const missing = REQUIRED_SKILLS.filter((s) => !existsSync(join(skillBase, s, "SKILL.md")));
   if (missing.length === 0) {
-    console.log("  ✓ All 10 dependency skills already installed");
+    logOk("All 10 skills already installed at ~/.claude/skills/");
     return;
   }
-  console.log(`  Installing ${missing.length} missing skills...`);
+  log("skills", `Installing ${missing.length} dependency skills to ~/.claude/skills/...`);
   for (const name of missing) {
     const src = join(SKILLS_DIR, name);
     if (!existsSync(join(src, "SKILL.md"))) {
-      console.log(`  ⚠ ${name} skill not found in framework — skipping`);
+      logWarn(`"${name}" skill not found in framework`);
       continue;
     }
     const dest = join(skillBase, name);
     mkdirSync(dest, { recursive: true });
     copyDir(src, dest);
+    logOk(`${name} installed`);
   }
-  console.log(`  ✓ Installed ${missing.length} dependency skills to ~/.claude/skills/`);
 }
 
 function copyDir(src, dest, filter = () => true) {
@@ -79,13 +117,9 @@ function copyFrameworkSkill(targetDir) {
     const src = join(PKG_ROOT, f);
     if (existsSync(src)) copyFile(src, join(targetDir, f));
   }
-  // agents
   copyDir(join(PKG_ROOT, "agents"), join(targetDir, "agents"));
-  // .claude/commands
   copyDir(join(PKG_ROOT, ".claude"), join(targetDir, ".claude"));
-  // evals
   copyDir(join(PKG_ROOT, "evals"), join(targetDir, "evals"));
-  // data scaffold
   mkdirSync(join(targetDir, "data/projects"), { recursive: true });
   mkdirSync(join(targetDir, "data/decisions"), { recursive: true });
   mkdirSync(join(targetDir, "data/logs"), { recursive: true });
@@ -98,7 +132,7 @@ function copyFrameworkSkill(targetDir) {
 async function scaffoldTemplates(targetDir, types, skipPrompts) {
   if (types.includes("contracts") || types.includes("full")) {
     copyDir(join(TEMPLATES_DIR, "contracts"), join(targetDir, "contracts"));
-    console.log("  ✓ contracts/");
+    logOk("contracts/");
   }
   if (types.includes("frontend") || types.includes("full")) {
     const frontendDir = join(targetDir, "frontend");
@@ -110,58 +144,77 @@ async function scaffoldTemplates(targetDir, types, skipPrompts) {
       "--import-alias", "@/*",
     ];
     if (skipPrompts) nextArgs.push("--yes");
-    console.log("  Initializing Next.js with create-next-app...");
+
     try {
       const { execSync } = await import("child_process");
-      execSync(`npx ${nextArgs.join(" ")}`, { stdio: "inherit", timeout: 120000 });
+      execSync(`npx ${nextArgs.join(" ")}`, { stdio: "pipe", timeout: 120000 });
+      logOk("create-next-app scaffolded TypeScript project");
     } catch {
-      console.log("  ⚠ create-next-app failed — falling back to template copy");
+      logWarn("create-next-app failed, copying template directly");
       copyDir(join(TEMPLATES_DIR, "frontend"), frontendDir, (p) => !p.endsWith("package-lock.json"));
     }
-    // Overlay agentic kit hooks, components, providers, lib
+
+    // Ensure the template's package.json wins (Tailwind, Stellar packages, TypeScript)
+    const templatePkg = join(TEMPLATES_DIR, "frontend", "package.json");
+    if (existsSync(templatePkg)) {
+      copyFile(templatePkg, join(frontendDir, "package.json"));
+      logOk("package.json configured with Tailwind v4 + Stellar SDK + Wallets Kit");
+    }
+
+    // Copy Tailwind v4 CSS setup if not present
+    const cssPath = join(frontendDir, "src/app/globals.css");
+    const twCss = `@import "tailwindcss";`;
+    if (existsSync(cssPath)) {
+      const css = readFileSync(cssPath, "utf-8");
+      if (!css.includes("tailwindcss")) {
+        writeFileSync(cssPath, twCss + "\n\n" + css);
+      }
+    }
+
     copyDir(join(TEMPLATES_DIR, "frontend/hooks"), join(frontendDir, "src/hooks"));
     copyDir(join(TEMPLATES_DIR, "frontend/components"), join(frontendDir, "src/components"));
     copyDir(join(TEMPLATES_DIR, "frontend/providers"), join(frontendDir, "src/providers"));
     copyDir(join(TEMPLATES_DIR, "frontend/lib"), join(frontendDir, "src/lib"));
     copyDir(join(TEMPLATES_DIR, "frontend/examples"), join(frontendDir, "src/examples"));
-    console.log("  ✓ frontend/ (agentic kit overlay applied)");
+    logOk("frontend/ agentic kit overlay applied");
   }
   if (types.includes("backend") || types.includes("full")) {
     const dst = join(targetDir, "backend");
     copyDir(join(TEMPLATES_DIR, "backend"), dst, (p) => !p.endsWith("package-lock.json"));
-    console.log("  ✓ backend/");
+    logOk("backend/");
   }
   if (types.includes("cicd") || types.includes("full")) {
     copyDir(join(TEMPLATES_DIR, "cicd"), join(targetDir, ".github/workflows"));
-    console.log("  ✓ .github/workflows/");
+    logOk(".github/workflows/");
   }
   if (types.includes("tests") || types.includes("full")) {
     copyDir(join(PKG_ROOT, "tests"), join(targetDir, "tests"));
-    console.log("  ✓ tests/");
+    logOk("tests/");
   }
 }
 
 async function main() {
   const args = process.argv.slice(2);
   const usage = `
-Usage:
-  npx create-stellar-agentic <project-name> [options]
-  npx create-stellar-agentic --skill-only <dir>
-  npx create-stellar-agentic --help
+  ${color("Usage", "bold")}
+    ${color("npx create-stellar-agentic <project-name>", "cyan")} ${color("[options]", "dim")}
+    ${color("npx create-stellar-agentic --skill-only <dir>", "cyan")}
+    ${color("npx create-stellar-agentic --help", "cyan")}
 
-Options:
-  --skill-only     Install only the Agentic OS skill files into an existing project
-  --template <t>   Scaffold type: full (default), contract-only, frontend-only (uses create-next-app), backend-only, payment-only
-  --no-install     Skip npm install step
-  --yes, -y        Skip all prompts
+  ${color("Options", "bold")}
+    ${color("--skill-only", "yellow")}     Install only the Agentic OS skill files into an existing project
+    ${color("--template <t>", "yellow")}   Scaffold type: full, contract-only, frontend-only, backend-only, payment-only
+    ${color("--no-install", "yellow")}     Skip npm install step
+    ${color("--yes, -y", "yellow")}        Skip all prompts
 
-Examples:
-  npx create-stellar-agentic my-stellar-dapp
-  npx create-stellar-agentic . --skill-only
-  npx create-stellar-agentic my-contracts --template contract-only
+  ${color("Examples", "bold")}
+    ${color("npx create-stellar-agentic my-stellar-dapp", "dim")}
+    ${color("npx create-stellar-agentic . --skill-only", "dim")}
+    ${color("npx create-stellar-agentic my-contracts --template contract-only", "dim")}
 `;
 
   if (args.includes("--help") || args.includes("-h")) {
+    console.log(BANNER);
     console.log(usage);
     process.exit(0);
   }
@@ -170,66 +223,68 @@ Examples:
   const noInstall = args.includes("--no-install");
   const skipPrompts = args.includes("--yes") || args.includes("-y");
 
-  // Determine template type
   let tmplIdx = args.indexOf("--template");
   let tmplType = "full";
   if (tmplIdx !== -1 && tmplIdx + 1 < args.length) {
     tmplType = args[tmplIdx + 1];
   }
 
-  // Determine target dir
   let targetDir;
   if (skillOnly) {
     const dirIdx = args.indexOf("--skill-only");
     targetDir = args[dirIdx + 1] || ".";
   } else {
     const nameArg = args.find((a) => !a.startsWith("-"));
-    targetDir = nameArg || (IS_TTY ? await ask("Project name: ") : ".");
+    targetDir = nameArg || (IS_TTY ? await ask("Project name:") : ".");
   }
 
   targetDir = targetDir.trim();
   if (!targetDir) {
-    console.error("Error: no project directory specified.");
+    console.error(`  ${color(symbol("cross"), "red")} No project directory specified.`);
     console.log(usage);
     process.exit(1);
   }
 
-  // Resolve path
   const resolved = join(process.cwd(), targetDir);
 
+  console.log(BANNER);
+
   if (skillOnly) {
-    // Install skill files into existing project
-    console.log(`\n  Installing Stellar Agentic skill into ${targetDir}...\n`);
+    console.log(`  ${color("Installing framework into", "bold")} ${color(targetDir, "cyan")}\n`);
     copyFrameworkSkill(resolved);
-    console.log("  ✓ SKILL.md, CLAUDE.md");
-    console.log("  ✓ agents/");
-    console.log("  ✓ .claude/commands/");
-    console.log("  ✓ evals/");
-    console.log("  ✓ data/");
+    logOk("SKILL.md + CLAUDE.md");
+    logOk("6 specialist agents");
+    logOk("4 slash commands (scaffold, deploy, test-e2e, graphify)");
+    logOk("eval criteria per component");
+    logOk("data/ directory for project memory");
     await installDependencySkills();
-    console.log("\n  Done! The Stellar Agentic Framework is ready in this project.");
-    console.log("  Run /scaffold to generate your first template, or use the agents directly.");
-    console.log("");
+    console.log(`\n  ${color(symbol("star"), "green")} ${color("Stellar Agentic Framework ready!", "bold")}`);
+    console.log(`  ${color("Run /scaffold to generate templates or use agents directly.", "dim")}\n`);
     process.exit(0);
   }
 
-  // Full project scaffold
-  console.log(`\n  Creating Stellar dApp in ${targetDir}/...\n`);
+  const TOTAL = noInstall ? 3 : 4;
+  let step = 0;
+
+  console.log(`  ${color("Creating", "bold")} ${color(targetDir + "/", "cyan")}\n`);
 
   if (existsSync(resolved) && !skipPrompts) {
-    const ok = await ask(`  Directory ${targetDir} already exists. Overwrite? (y/N) `);
+    const ok = await ask(`Directory "${targetDir}" already exists. Overwrite? (y/N)`);
     if (ok.toLowerCase() !== "y") {
-      console.log("  Aborted.");
+      console.log(`  ${color(symbol("cross"), "red")} Aborted.\n`);
       process.exit(0);
     }
   }
 
   mkdirSync(resolved, { recursive: true });
 
-  // Copy framework skill files
+  step++;
+  logStep(step, TOTAL, "Copying framework skill files");
   copyFrameworkSkill(resolved);
+  logOk("Framework kernel (SKILL.md, CLAUDE.md)");
+  logOk("6 specialist agents");
+  logOk("Slash commands + evals + data/");
 
-  // Scaffold templates
   const types = tmplType === "full"
     ? ["contracts", "frontend", "backend", "cicd", "tests"]
     : tmplType === "contract-only" ? ["contracts"]
@@ -238,75 +293,78 @@ Examples:
     : tmplType === "payment-only" ? ["backend"]
     : ["contracts", "frontend", "backend", "cicd"];
 
+  step++;
+  logStep(step, TOTAL, `Scaffolding ${tmplType} project`);
   await scaffoldTemplates(resolved, types, skipPrompts);
 
-  // Install Stellar dependencies for frontend (create-next-app doesn't include them)
+  // Install Stellar packages in frontend
   if (types.includes("frontend") || types.includes("full")) {
     const frontendDir = join(resolved, "frontend");
     if (existsSync(join(frontendDir, "package.json")) && !noInstall) {
       try {
         const { execSync } = await import("child_process");
-        console.log("  Installing Stellar packages in frontend/...");
-        execSync("npm install @stellar/stellar-sdk@^12.0.0 @creit.tech/stellar-wallets-kit@^1.0.0 @stellar/freighter-api@^2.0.0", { cwd: frontendDir, stdio: "inherit", timeout: 120000 });
-      } catch {}
+        log("npm", "Installing Stellar SDK, Wallets Kit, and Freighter API...", "yellow");
+        execSync(
+          "npm install @stellar/stellar-sdk@^12.0.0 @creit.tech/stellar-wallets-kit@^1.0.0 @stellar/freighter-api@^2.0.0 tailwindcss@^4.0.0 @tailwindcss/postcss@^4.0.0",
+          { cwd: frontendDir, stdio: "pipe", timeout: 120000 }
+        );
+        logOk("Stellar packages installed");
+      } catch {
+        logWarn("npm install failed — run npm install manually in frontend/");
+      }
     }
   }
 
-  // Install dependency skills (smart-contracts, graphify, etc.)
+  step++;
+  logStep(step, TOTAL, "Installing Claude Code skills");
   if (!noInstall) {
     await installDependencySkills();
   }
 
-  // Write project README
+  // Project README
   const projectName = basename(resolved);
   writeFileSync(join(resolved, "README.md"), `# ${projectName}
 
 Scaffolded with [create-stellar-agentic](https://github.com/rylsherdamz-rgb/stellar-agentic-framework).
 
 ## Quick Start
-
 \`\`\`bash
-# Install dependencies (frontend deps installed by create-next-app + Stellar packages)
-cd frontend && npm run dev
-
-# Start backend
-cd backend && npm run dev
+cd frontend && npm run dev     # Next.js + Stellar Wallets Kit
+cd backend && npm run dev      # Express + x402/MPP
 \`\`\`
 
 ## Components
-${types.includes("contracts") ? "- **contracts/** — Rust smart contracts (soroban-sdk)\n" : ""}${types.includes("frontend") ? "- **frontend/** — Next.js 15 + Stellar Wallets Kit\n" : ""}${types.includes("backend") ? "- **backend/** — Express API + x402/MPP payments\n" : ""}- **agents/** — Stellar Agentic OS specialist agents
-- **evals/** — Evaluation criteria for each component
-- **.claude/commands/** — Slash commands for deploy/test/graphify
+${types.includes("contracts") ? "- **contracts/** — Rust smart contracts (soroban-sdk)\n" : ""}${types.includes("frontend") ? "- **frontend/** — Next.js 15 + Tailwind CSS v4 + Stellar Wallets Kit\n" : ""}${types.includes("backend") ? "- **backend/** — Express API + x402/MPP payments\n" : ""}- **agents/** — 6 specialist agents (contracts, frontend, backend, payments, ops, ZK)
+- **evals/** — Evaluation criteria per component
+- **.claude/commands/** — Slash commands for deploy, test-e2e, graphify
 
 ## Stellar Agentic Framework
 
 This project uses the [Stellar Agentic Framework](https://github.com/rylsherdamz-rgb/stellar-agentic-framework) — an eval-driven, multi-agent harness for building production Stellar dApps.
 `);
 
-  console.log(`  ✦ ${projectName} created! ✦`);
-  console.log("");
-  console.log(`  cd ${targetDir}`);
-
-  console.log("");
-  console.log("  Next steps:");
+  console.log();
+  console.log(`  ${color(symbol("star"), "green")} ${color("  " + projectName + " created!", "bold")}`);
+  console.log();
+  console.log(`  ${color("  cd " + targetDir, "cyan")}`);
+  console.log();
+  console.log(`  ${color("Next steps", "bold")}`);
   if (types.includes("contracts")) {
-    console.log("    cd contracts && cargo build --release --target wasm32v1-none");
-    console.log("    stellar contract deploy ...");
+    logItem("cd contracts && cargo build --release", "Build Rust smart contracts");
   }
   if (types.includes("frontend")) {
-    console.log("    cd frontend && npm run dev");
+    logItem("cd frontend && npm run dev", "Start the Next.js dev server");
   }
   if (types.includes("backend")) {
-    console.log("    cd backend && npm run dev");
+    logItem("cd backend && npm run dev", "Start the Express API server");
   }
-  console.log("");
-  console.log("  Explore the project architecture:");
-  console.log("    /graphify query \"how does the payment flow work?\"");
-  console.log("    /deploy . testnet 2>/dev/null || echo 'set up your keys first'");
-  console.log("");
+  console.log();
+  logItem("/graphify query \"architecture\"", "Explore project with knowledge graph");
+  logItem("/deploy . testnet", "Deploy contracts to testnet");
+  console.log();
 }
 
 main().catch((err) => {
-  console.error("Error:", err.message);
+  console.error(`\n  ${color(symbol("cross"), "red")} ${color("Error:", "bold")} ${err.message}\n`);
   process.exit(1);
 });
