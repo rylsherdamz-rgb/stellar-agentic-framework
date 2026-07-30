@@ -57,8 +57,8 @@ jobs:
           node -e "
             const p = require('./package.json');
             p.name = '@rylsherdamz-rgb/create-stellar-agentic';
-            p.publishConfig = { registry: 'https://npm.pkg.github.com' };
             require('fs').writeFileSync('package.json', JSON.stringify(p, null, 2) + '\n');
           "
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > .npmrc
-          npm publish --registry=https://npm.pkg.github.com
+          npm config set registry https://npm.pkg.github.com
+          npm config set //npm.pkg.github.com/:_authToken ${{ secrets.GITHUB_TOKEN }}
+          npm publish
