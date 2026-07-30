@@ -10,7 +10,7 @@
     <img src="https://img.shields.io/github/last-commit/rylsherdamz-rgb/stellar-agentic-framework?color=7B3FE4&logo=github&label=updated">
   </a>
   <a href="https://github.com/rylsherdamz-rgb/stellar-agentic-framework/actions">
-    <img src="https://img.shields.io/github/actions/workflow/status/rylsherdamz-rgb/stellar-agentic-framework/contracts.yml?branch=master&label=contracts&logo=rust">
+    <img src="https://img.shields.io/github/actions/workflow/status/rylsherdamz-rgb/stellar-agentic-framework/ci.yml?branch=master&label=ci&logo=github">
   </a>
   <a href="https://www.npmjs.com/package/create-stellar-agentic">
     <img src="https://img.shields.io/npm/v/create-stellar-agentic?color=cb3837&logo=npm&label=cli">
