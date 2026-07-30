@@ -3,33 +3,42 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Box, Layout, Server, CreditCard, ShieldCheck, GitBranch, ArrowRight, Copy, Check } from "lucide-react";
+import { Box, Layout, Server, CreditCard, ShieldCheck, GitBranch, ArrowRight, Copy, Check, Cpu, Network, Workflow, Zap, BookOpen, FileCode } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const features = [
-  { icon: Box, title: "Smart Contracts", desc: "Scaffold Rust/Soroban contracts with build, test, and deploy workflows." },
-  { icon: Layout, title: "dApp Frontends", desc: "Generate Next.js apps pre-integrated with Stellar Wallets Kit." },
-  { icon: Server, title: "Backend APIs", desc: "Build API servers and indexers that query Stellar RPC and Horizon." },
-  { icon: CreditCard, title: "x402 Payments", desc: "Monetize APIs with HTTP 402 and Stellar USDC. Machine-to-machine payments." },
-  { icon: ShieldCheck, title: "Zero-Knowledge Proofs", desc: "Integrate Groth16, Circom, and Noir verifiers into Stellar contracts." },
-  { icon: GitBranch, title: "Eval-Driven", desc: "Every output verified against structured eval criteria with max 3 retry steers." },
+  { icon: Box, title: "Smart Contracts", desc: "Scaffold Rust/Soroban contracts with build, test, and deploy workflows — testnet gated." },
+  { icon: Layout, title: "dApp Frontends", desc: "Generate Next.js apps pre-integrated with Stellar Wallets Kit, hooks, and tx flows." },
+  { icon: Server, title: "Backend APIs", desc: "Build API servers and indexers that query Stellar RPC and Horizon with x402 middleware." },
+  { icon: CreditCard, title: "x402 Payments", desc: "Monetize APIs with HTTP 402 and Stellar USDC — zero-XLM clients via OZ Channels." },
+  { icon: ShieldCheck, title: "Zero-Knowledge Proofs", desc: "Integrate Groth16, Circom, and Noir verifiers into Stellar contracts via BLS12-381." },
+  { icon: GitBranch, title: "Eval-Driven Pipeline", desc: "Every agent output verified against structured evals with max 3 retries. No blind trust." },
 ];
 
 const agents = [
-  { handle: "@stellar-contracts", role: "Rust smart contract specialist", skills: ["soroban-sdk", "WASM", "deploy"] },
-  { handle: "@stellar-frontend", role: "Next.js dApp frontend developer", skills: ["React", "Wallets Kit", "Tailwind"] },
-  { handle: "@stellar-backend", role: "API and indexer engineer", skills: ["RPC", "Horizon", "Data"] },
-  { handle: "@stellar-payments", role: "x402 and MPP payment flow architect", skills: ["USDC", "Paywall", "MPP"] },
-  { handle: "@stellar-zk", role: "Zero-knowledge integration engineer", skills: ["Groth16", "Circom", "Noir"] },
+  { handle: "@stellar-contracts", role: "Rust smart contract engineer", skills: ["soroban-sdk", "WASM", "deploy"], edgeOut: "contract IDs, ABI" },
+  { handle: "@stellar-frontend", role: "dApp frontend developer", skills: ["React", "Wallets Kit", "Tailwind"], edgeIn: "contract IDs", edgeOut: "API route specs" },
+  { handle: "@stellar-backend", role: "API and indexer engineer", skills: ["RPC", "Horizon", "Data"], edgeIn: "payment middleware, API needs" },
+  { handle: "@stellar-payments", role: "Payment flow architect", skills: ["USDC", "Paywall", "MPP"], edgeOut: "middleware code" },
+  { handle: "@stellar-ops", role: "DevOps and platform engineer", skills: ["CI/CD", "Docker", "GitHub Actions"], edgeIn: "build artifacts from all nodes" },
+  { handle: "@stellar-zk", role: "Zero-knowledge engineer", skills: ["Groth16", "Circom", "Noir"], edgeOut: "verifier contract WASM" },
 ];
 
 const ROUTES = [
-  { label: "Features", href: "#features" },
+  { label: "Why", href: "#why" },
   { label: "Architecture", href: "#architecture" },
+  { label: "Kernel", href: "#kernel" },
   { label: "Install", href: "#install" },
   { label: "Agents", href: "#agents" },
   { label: "Usage", href: "#usage" },
+];
+
+const installMatrix = [
+  { want: "Add AI orchestration to an existing Stellar project", use: "Skill → npx skills add ..." },
+  { want: "Scaffold a brand-new Stellar dApp monorepo", use: "CLI → npx create-stellar-agentic" },
+  { want: "Build a dApp with AI assistance (recommended)", use: "Both — CLI scaffolds, Skill builds" },
+  { want: "Use AI agents without Claude Code", use: "CLI only — standalone scaffolding" },
 ];
 
 function CopyButton({ getText, children, className = "" }: { getText: () => string; children?: React.ReactNode; className?: string }) {
@@ -79,7 +88,9 @@ function Logomark({ size = 24 }: { size?: number }) {
 export default function Home() {
   const heroRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
+  const whyRef = useRef<HTMLDivElement>(null);
   const archRef = useRef<HTMLDivElement>(null);
+  const kernelRef = useRef<HTMLDivElement>(null);
   const installRef = useRef<HTMLDivElement>(null);
   const featuresRef = useRef<HTMLDivElement>(null);
   const agentsRef = useRef<HTMLDivElement>(null);
@@ -99,7 +110,9 @@ export default function Home() {
     return () => ctx.revert();
   }, []);
 
+  useSectionAnim(whyRef, ".why-card", { stagger: 0.1 });
   useSectionAnim(archRef, ".arch-pipe-card", { stagger: 0.08 });
+  useSectionAnim(kernelRef, ".kernel-card", { stagger: 0.08 });
   useSectionAnim(installRef, ".install-card", { stagger: 0.12 });
   useSectionAnim(featuresRef, ".card", { stagger: 0.07 });
   useSectionAnim(agentsRef, ".agent-card", { stagger: 0.06, extra: { scale: 0.95 } });
@@ -121,7 +134,11 @@ export default function Home() {
         <div className="hero-glow" ref={glowRef} />
         <div className="container hero-inner">
           <h1><span>Build Stellar dApps</span><br />with AI Agents</h1>
-          <p>An eval-driven, multi-agent coding harness that routes tasks to specialist agents, verifies outputs against structured evals, and produces production-grade Stellar dApps.</p>
+          <p>
+            <strong>AI orchestration</strong> + <strong>project scaffolding</strong> for Stellar.
+            Six agents write, verify, and deploy contracts, frontends, and payment APIs — no context-switching.
+            The CLI bootstraps the project. The Skill builds it. Use either, or both.
+          </p>
           <div className="hero-actions">
             <div className="hero-cta-group">
               <span className="hero-cta-label">Use with Claude Code / OpenCode</span>
@@ -143,7 +160,37 @@ export default function Home() {
               <span className="dot" /><span className="dot" /><span className="dot" />
             </div>
             <div className="body">
-              Kernel routes task to <span>@stellar-contracts</span>, <span>@stellar-frontend</span>, <span>@stellar-backend</span> &mdash; each verified against evals, max 3 retries, graphified on completion.
+              Graph engine routes task to <span>@stellar-contracts</span> → <span>@stellar-frontend</span> → <span>@stellar-backend</span> — each verified against evals, max 3 retries.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="why" className="section-alt" ref={whyRef}>
+        <div className="container">
+          <span className="section-label">Why This Exists</span>
+          <h2 className="section-title">Generic AI tools don't know Stellar</h2>
+          <p className="section-sub">Copilot and ChatGPT don't know contracts must be #![no_std], or that x402 needs OZ Channels and CAIP-2 network IDs. This framework embeds that domain knowledge into 10 skills, 6 agents, and 5 eval files.</p>
+          <div className="why-grid">
+            <div className="why-card">
+              <div className="why-icon"><FileCode size={18} /></div>
+              <h3>Domain Skills</h3>
+              <p>10 bundled knowledge skills (soroban-sdk, Wallets Kit, x402, Groth16, SEPs, MCP, etc.) — loaded on demand, not dumped into context.</p>
+            </div>
+            <div className="why-card">
+              <div className="why-icon"><Cpu size={18} /></div>
+              <h3>Graph Engine Orchestration</h3>
+              <p>Not a chat. The kernel builds a work graph per task — which agents, in what order, sharing what state — and verifies each node before proceeding.</p>
+            </div>
+            <div className="why-card">
+              <div className="why-icon"><Zap size={18} /></div>
+              <h3>Eval-Driven Pipeline</h3>
+              <p>Every output checked against structured pass/fail evals. Fail → retry with corrective context (max 3). Pass → hand off to next node. No blind trust.</p>
+            </div>
+            <div className="why-card">
+              <div className="why-icon"><BookOpen size={18} /></div>
+              <h3>CLI Bootstraps, Skill Builds</h3>
+              <p>The CLI scaffolds a production-ready monorepo (contracts + frontend + backend + CI/CD). The Skill activates AI agents inside it. Together they're a complete workflow.</p>
             </div>
           </div>
         </div>
@@ -152,69 +199,134 @@ export default function Home() {
       <section id="architecture" ref={archRef}>
         <div className="container">
           <span className="section-label">Architecture</span>
-          <h2 className="section-title">How it works</h2>
-          <p className="section-sub">The kernel never writes code. It routes, verifies, and steers. Six agents do the work.</p>
+          <h2 className="section-title">Org Graph</h2>
+          <p className="section-sub">Six agent nodes, each owning a zone with persistent context and defined edges. Stable structure that persists across sessions.</p>
           <div className="arch-pipeline">
-            <div className="arch-pipe-card"><div className="label">Input</div><div className="value">Describe task</div><div className="meta">natural language</div></div>
+            <div className="arch-pipe-card"><div className="label">Zone</div><div className="value">Contracts</div><div className="meta">Rust, WASM, deploy</div></div>
             <div className="arch-pipe-arrow"><ArrowRight size={16} /></div>
-            <div className="arch-pipe-card"><div className="label">Route</div><div className="value">Agent Router</div><div className="meta">6 specialists</div></div>
+            <div className="arch-pipe-card"><div className="label">Zone</div><div className="value">Frontend</div><div className="meta">Next.js, Wallets Kit</div></div>
             <div className="arch-pipe-arrow"><ArrowRight size={16} /></div>
-            <div className="arch-pipe-card"><div className="label">Build</div><div className="value">Skills + Evals</div><div className="meta">10 knowledge skills</div></div>
+            <div className="arch-pipe-card"><div className="label">Zone</div><div className="value">Backend</div><div className="meta">Express, RPC, x402</div></div>
             <div className="arch-pipe-arrow"><ArrowRight size={16} /></div>
-            <div className="arch-pipe-card"><div className="label">Verify</div><div className="value">Eval Gate</div><div className="meta">max 3 retries</div></div>
+            <div className="arch-pipe-card"><div className="label">Zone</div><div className="value">Payments</div><div className="meta">USDC, Channels, MPP</div></div>
             <div className="arch-pipe-arrow"><ArrowRight size={16} /></div>
-            <div className="arch-pipe-card"><div className="label">Output</div><div className="value">Contract + Frontend + API</div><div className="meta">graphified</div></div>
+            <div className="arch-pipe-card"><div className="label">Zone</div><div className="value">DevOps</div><div className="meta">CI/CD, Docker</div></div>
+            <div className="arch-pipe-arrow"><ArrowRight size={16} /></div>
+            <div className="arch-pipe-card"><div className="label">Zone</div><div className="value">ZK</div><div className="meta">Groth16, Circom</div></div>
           </div>
         </div>
       </section>
 
-      <section id="install" className="section-alt" ref={installRef}>
+      <section id="kernel" className="section-alt" ref={kernelRef}>
+        <div className="container">
+          <span className="section-label">The Kernel</span>
+          <h2 className="section-title">Graph Engine (CLAUDE.md)</h2>
+          <p className="section-sub">The kernel is not a runtime — it is a structured prompt that tells the AI how to organize its own work. It generates a work graph for every task.</p>
+          <div className="kernel-grid">
+            <div className="kernel-card">
+              <div className="kernel-icon"><Network size={18} /></div>
+              <h3>Org Graph</h3>
+              <p>6 agent nodes, each with zone ownership, persistent context, and edge definitions. Stable across sessions.</p>
+            </div>
+            <div className="kernel-card">
+              <div className="kernel-icon"><Workflow size={18} /></div>
+              <h3>Work Graph</h3>
+              <p>Per-task dynamic wiring: sequential, parallel, conditional, fan-out, fan-in. Determined by data dependencies, not hardcoded order.</p>
+            </div>
+            <div className="kernel-card">
+              <div className="kernel-icon"><Server size={18} /></div>
+              <h3>Node Contract</h3>
+              <p>Each node gets intent + context + tools. Returns output + state delta + verifier result. No node writes code outside its zone.</p>
+            </div>
+            <div className="kernel-card">
+              <div className="kernel-icon"><GitBranch size={18} /></div>
+              <h3>Dynamic Orgs</h3>
+              <p>Graph rewrites itself: spawn nodes mid-task, reroute on failure, collapse on early convergence, reorder on priority shift.</p>
+            </div>
+            <div className="kernel-card">
+              <div className="kernel-icon"><ShieldCheck size={18} /></div>
+              <h3>Eval Gate</h3>
+              <p>After each node, run its verifier. Pass → proceed. Fail → retry with corrective context (max 3) → reroute to fallback → escalate.</p>
+            </div>
+            <div className="kernel-card">
+              <div className="kernel-icon"><Zap size={18} /></div>
+              <h3>Edge Context</h3>
+              <p>Shared state (contract IDs, deploy records, .env) travels along edges. Nodes never rediscover what sibling nodes already computed.</p>
+            </div>
+          </div>
+          <div className="workgraph-diagram">
+            <div className="workgraph-label">Example work graph: <em>"Build a token contract with a React frontend"</em></div>
+            <div className="workgraph-body">
+              <span className="wg-node">[contracts]</span>
+              <span className="wg-edge">──(contract_id)──→</span>
+              <span className="wg-node">[frontend]</span>
+              <span className="wg-edge"> │</span>
+              <span className="wg-edge">verifier ↓</span>
+              <span className="wg-edge" />
+              <span className="wg-edge">verifier ↓</span>
+              <span className="wg-end">pass → [kernel: synthesize]</span>
+              <span className="wg-end" />
+              <span className="wg-end">pass →</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="install" ref={installRef}>
         <div className="container">
           <span className="section-label">Install</span>
-          <h2 className="section-title">Two ways in</h2>
-          <p className="section-sub">Pick the path that matches your workflow.</p>
+          <h2 className="section-title">Which one?</h2>
+          <p className="section-sub">Two entry points, one framework. Here&apos;s how to choose.</p>
+          <div className="which-table">
+            {installMatrix.map((row, i) => (
+              <div key={i} className="which-row">
+                <div className="which-cell which-want">{row.want}</div>
+                <div className="which-cell which-use">{row.use}</div>
+              </div>
+            ))}
+          </div>
           <div className="install-grid">
             <div className="install-card">
               <div className="install-card-header">
-                <span className="install-badge">A</span>
-                <h3>Agent Skill</h3>
+                <span className="install-badge">Skill</span>
+                <h3>Agent Orchestration</h3>
               </div>
               <div className="install-audience">For Claude Code and OpenCode users</div>
-              <p className="install-desc">Install the framework as an AI skill. The harness activates automatically in every session — describe what you want in natural language.</p>
+              <p className="install-desc">Adds 6 AI agents to your sessions. The graph engine activates automatically — describe what you want in natural language.</p>
               <div className="install-code-block">
                 <div className="install-code-bar">Shell</div>
-                <div className="install-code-body"><span className="cp">$ </span><span className="ccmd">npx skills add rylsherdamz-rgb/stellar-agentic-framework</span><br /><br /><span className="co"># or specify your agent</span><br /><span className="cp">$ </span><span className="ccmd">npx skills add rylsherdamz-rgb/stellar-agentic-framework --agent claude-code</span><br /><span className="cp">$ </span><span className="ccmd">npx skills add rylsherdamz-rgb/stellar-agentic-framework --agent opencode</span></div>
+                <div className="install-code-body"><span className="cp">$ </span><span className="ccmd">npx skills add rylsherdamz-rgb/stellar-agentic-framework</span><br /><br /><span className="co"># or specify your agent</span><br /><span className="cp">$ </span><span className="ccmd">npx skills add ... --agent claude-code</span><br /><span className="cp">$ </span><span className="ccmd">npx skills add ... --agent opencode</span></div>
               </div>
               <div className="install-hint">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                <span>Then just describe: <em>&ldquo;Build a token contract with a React frontend and x402 payments&rdquo;</em></span>
+                <span>Drops into any existing repo — no project structure required.</span>
               </div>
             </div>
             <div className="install-card">
               <div className="install-card-header">
-                <span className="install-badge">B</span>
-                <h3>Scaffold CLI</h3>
+                <span className="install-badge">CLI</span>
+                <h3>Project Scaffold</h3>
               </div>
-              <div className="install-audience">For standalone projects</div>
-              <p className="install-desc">Generate a complete Stellar dApp in one command — contracts, frontend, backend, CI/CD, agents, and evals. No Claude Code required.</p>
+              <div className="install-audience">For standalone projects (no AI required)</div>
+              <p className="install-desc">Generates a production-ready monorepo: contracts, frontend, backend, CI/CD, and agent files. The CLI auto-installs the Skill too.</p>
               <div className="install-code-block">
                 <div className="install-code-bar">Shell</div>
                 <div className="install-code-body"><span className="cp">$ </span><span className="ccmd">npx create-stellar-agentic my-dapp --yes</span><br /><br /><span className="co">  ✔ Scaffolding Stellar Agentic dApp...</span><br /><span className="co">  ✔ contracts/hello-world/src/lib.rs</span><br /><span className="co">  ✔ contracts/token/src/lib.rs</span><br /><span className="co">  ✔ frontend/src/app/page.tsx</span><br /><span className="co">  ✔ backend/src/index.ts</span><br /><span className="co">  ✔ All 10 skills installed</span></div>
               </div>
               <div className="install-hint">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                <span>If you use Claude Code later, it auto-detects the harness — no extra setup.</span>
+                <span><strong>Killer feature:</strong> opening the generated project in Claude Code auto-activates the full harness — no extra steps.</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="features" ref={featuresRef}>
+      <section id="features" className="section-alt" ref={featuresRef}>
         <div className="container">
           <span className="section-label">Features</span>
           <h2 className="section-title">Everything you need to ship on Stellar</h2>
-          <p className="section-sub">Six specialist agents, zero boilerplate. From contract to deployment in minutes.</p>
+          <p className="section-sub">Six specialist agents, 10 domain skills, 5 eval files. From contract to deployment in minutes.</p>
           <div className="card-grid">
             {features.map((f, i) => {
               const Icon = f.icon;
@@ -230,16 +342,18 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="agents" className="section-alt" ref={agentsRef}>
+      <section id="agents" ref={agentsRef}>
         <div className="container">
           <span className="section-label">Agent Registry</span>
-          <h2 className="section-title">Specialist agents at your command</h2>
-          <p className="section-sub">Each agent is loaded with domain-specific skills and eval criteria. Describe what you want — the harness routes it to the right agent.</p>
+          <h2 className="section-title">Six agents with edge context</h2>
+          <p className="section-sub">Each agent is a structured prompt configuration (not a running process). They communicate through a defined graph — data flows along edges, not through the kernel.</p>
           <div className="agents-grid">
             {agents.map((a, i) => (
               <div key={i} className="agent-card">
                 <div className="handle">{a.handle}</div>
                 <div className="role">{a.role}</div>
+                {a.edgeIn && <div className="edge edge-in">← {a.edgeIn}</div>}
+                {a.edgeOut && <div className="edge edge-out">→ {a.edgeOut}</div>}
                 <div className="skills">{a.skills.map((s, j) => <span key={j}>{s}</span>)}</div>
               </div>
             ))}
@@ -247,16 +361,16 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="usage" ref={usageRef}>
+      <section id="usage" className="section-alt" ref={usageRef}>
         <div className="container">
           <span className="section-label">Quick Start</span>
           <h2 className="section-title">Ship in 3 steps</h2>
-          <p className="section-sub">From empty directory to deployed dApp — the harness handles the routing, verification, and knowledge graphing.</p>
+          <p className="section-sub">From empty directory to deployed dApp — the graph engine handles routing, verification, and knowledge graphing.</p>
           <div className="steps">
             <div className="step">
               <span className="num">01</span>
               <h4>Install</h4>
-              <p>Install the framework as an AI skill or scaffold a project.</p>
+              <p>Pick your entry point — Skill for AI orchestration, CLI for project scaffolding, or both.</p>
               <div className="step-cmds">
                 <div><span className="step-cmd-prompt">$ </span><span>npx skills add rylsherdamz-rgb/stellar-agentic-framework</span></div>
                 <div><span className="step-cmd-prompt">$ </span><span>npx create-stellar-agentic my-dapp --yes</span></div>
@@ -265,7 +379,7 @@ export default function Home() {
             <div className="step">
               <span className="num">02</span>
               <h4>Describe</h4>
-              <p>Tell the harness what to build. It routes to the right agent automatically.</p>
+              <p>Tell the graph engine what to build. It generates a work graph and routes to the right agents.</p>
               <div className="step-prompt">
                 <span className="step-agent">@stellar-contracts </span>create a SAC-compatible token with mint, burn, and transfer operations
               </div>
@@ -273,7 +387,7 @@ export default function Home() {
             <div className="step">
               <span className="num">03</span>
               <h4>Ship</h4>
-              <p>Agents write code, evals verify it, knowledge graph maps the project.</p>
+              <p>Agents write code, evals verify it, knowledge graph maps the project. Deploy with one command.</p>
               <div className="step-evals">
                 <div className="step-eval"><span className="step-eval-icon pass" /><span>Contract compiles to WASM</span></div>
                 <div className="step-eval"><span className="step-eval-icon pass" /><span>Tests pass</span></div>
