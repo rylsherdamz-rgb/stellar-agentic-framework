@@ -21,7 +21,7 @@
 
   <br><br>
 
-  <p><b>Build production Stellar dApps with AI agents that write, verify, and deploy code — no context-switching.</b></p>
+  <p><b>Build Stellar dApps with AI agents that write, verify, and deploy code — no context-switching.</b></p>
 
   <table>
     <tr>
