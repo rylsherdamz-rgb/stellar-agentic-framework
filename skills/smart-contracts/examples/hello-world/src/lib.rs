@@ -46,7 +46,7 @@ impl HelloWorld {
         let count = count + 1;
         env.storage().instance().set(&DataKey::Counter, &count);
 
-        let ledger_seq = env.ledger().sequence();
+        let _ledger_seq = env.ledger().sequence();
         env.storage()
             .instance()
             .extend_ttl(120 * 17280, 180 * 17280);

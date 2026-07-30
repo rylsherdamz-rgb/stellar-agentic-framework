@@ -1,6 +1,6 @@
 #![no_std]
 use soroban_sdk::{
-    contract, contracterror, contractimpl, contracttype, token, Address, BytesN, Env, String,
+    contract, contracterror, contractimpl, contracttype, panic_with_error, Address, Env, String,
     Symbol,
 };
 
@@ -90,7 +90,7 @@ impl Token {
         env.storage()
             .persistent()
             .get(&DataKey::Balance(addr))
-            .unwrap_or(0)
+            .unwrap_or(0i128)
     }
 
     pub fn total_supply(env: Env) -> i128 {
@@ -111,11 +111,11 @@ impl Token {
             .expect("not initialized");
         admin.require_auth();
 
-        let mut balance = env
+        let mut balance: i128 = env
             .storage()
             .persistent()
             .get(&DataKey::Balance(to.clone()))
-            .unwrap_or(0);
+            .unwrap_or(0i128);
         balance = balance.checked_add(amount).expect("overflow");
         env.storage()
             .persistent()
@@ -125,7 +125,7 @@ impl Token {
             .storage()
             .instance()
             .get(&DataKey::TotalSupply)
-            .unwrap_or(0);
+            .unwrap_or(0i128);
         supply = supply.checked_add(amount).expect("overflow");
         env.storage()
             .instance()
@@ -145,7 +145,7 @@ impl Token {
             .storage()
             .persistent()
             .get(&DataKey::Balance(from.clone()))
-            .unwrap_or(0);
+            .unwrap_or(0i128);
         if from_bal < amount {
             panic_with_error!(&env, TokenError::InsufficientBalance);
         }
@@ -158,7 +158,7 @@ impl Token {
             .storage()
             .persistent()
             .get(&DataKey::Balance(to.clone()))
-            .unwrap_or(0);
+            .unwrap_or(0i128);
         to_bal = to_bal.checked_add(amount).expect("overflow");
         env.storage()
             .persistent()
@@ -176,14 +176,16 @@ impl Token {
         env.storage()
             .persistent()
             .set(&DataKey::Allowance(from.clone(), spender.clone()), &amount);
-        extend_balance_ttl(&env, &from);
+        env.storage()
+            .persistent()
+            .extend_ttl(&DataKey::Allowance(from, spender), BUMP_THRESHOLD, BUMP_TO);
     }
 
     pub fn allowance(env: Env, from: Address, spender: Address) -> i128 {
         env.storage()
             .persistent()
             .get(&DataKey::Allowance(from, spender))
-            .unwrap_or(0)
+            .unwrap_or(0i128)
     }
 
     pub fn transfer_from(env: Env, spender: Address, from: Address, to: Address, amount: i128) {
@@ -196,7 +198,7 @@ impl Token {
             .storage()
             .persistent()
             .get(&DataKey::Allowance(from.clone(), spender.clone()))
-            .unwrap_or(0);
+            .unwrap_or(0i128);
         if allowed < amount {
             panic_with_error!(&env, TokenError::InsufficientAllowance);
         }
@@ -212,7 +214,7 @@ impl Token {
             .storage()
             .persistent()
             .get(&DataKey::Balance(from.clone()))
-            .unwrap_or(0);
+            .unwrap_or(0i128);
         if from_bal < amount {
             panic_with_error!(&env, TokenError::InsufficientBalance);
         }
@@ -225,7 +227,7 @@ impl Token {
             .storage()
             .persistent()
             .get(&DataKey::Balance(to.clone()))
-            .unwrap_or(0);
+            .unwrap_or(0i128);
         to_bal = to_bal.checked_add(amount).expect("overflow");
         env.storage()
             .persistent()
@@ -245,7 +247,7 @@ impl Token {
             .storage()
             .persistent()
             .get(&DataKey::Balance(from.clone()))
-            .unwrap_or(0);
+            .unwrap_or(0i128);
         if from_bal < amount {
             panic_with_error!(&env, TokenError::InsufficientBalance);
         }
@@ -258,7 +260,7 @@ impl Token {
             .storage()
             .instance()
             .get(&DataKey::TotalSupply)
-            .unwrap_or(0);
+            .unwrap_or(0i128);
         supply = supply.checked_sub(amount).expect("underflow");
         env.storage()
             .instance()

@@ -3,7 +3,7 @@ extern crate std;
 use super::*;
 use soroban_sdk::{
     testutils::{Address as _, Events as _, storage::Instance as _},
-    Address, Env, IntoVal, Vec, events::Event,
+    Address, Env,
 };
 
 fn setup() -> (Env, Address, HelloWorldClient<'static>) {
@@ -57,9 +57,13 @@ fn test_storage_ttl_extended_on_write() {
     let contract_id = env.register(HelloWorld, (&admin,));
     let client = HelloWorldClient::new(&env, &contract_id);
 
-    let ttl_before = env.storage().instance().get_ttl();
+    let ttl_before = env.as_contract(&contract_id, || {
+        env.storage().instance().get_ttl()
+    });
     client.increment();
-    let ttl_after = env.storage().instance().get_ttl();
+    let ttl_after = env.as_contract(&contract_id, || {
+        env.storage().instance().get_ttl()
+    });
     assert!(ttl_after >= ttl_before);
 }
 
@@ -67,5 +71,6 @@ fn test_storage_ttl_extended_on_write() {
 fn test_events_emitted() {
     let (env, _, client) = setup();
     client.increment();
-    assert!(env.events().all().len() > 0);
+    let event_count = env.events().all().events().len();
+    assert!(event_count > 0);
 }
