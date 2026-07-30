@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Box, Layout, Server, CreditCard, ShieldCheck, GitBranch, ArrowRight, ChevronDown } from "lucide-react";
+import { Box, Layout, Server, CreditCard, ShieldCheck, GitBranch, ArrowRight, ChevronDown, Copy, Check } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -37,6 +37,23 @@ const agents = [
   { handle: "@stellar-payments", role: "x402 and MPP payment flow architect", skills: ["USDC", "Paywall", "MPP"] },
   { handle: "@stellar-zk", role: "Zero-knowledge integration engineer", skills: ["Groth16", "Circom", "Noir"] },
 ];
+
+function CopyButton({ getText }: { getText: () => string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      className="copy-btn"
+      onClick={() => {
+        navigator.clipboard.writeText(getText());
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1800);
+      }}
+    >
+      {copied ? <Check size={13} /> : <Copy size={13} />}
+      {copied ? "Copied" : "Copy"}
+    </button>
+  );
+}
 
 export default function Home() {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -173,6 +190,9 @@ export default function Home() {
               <span className="terminal-dot" />
               <span className="terminal-dot" />
               <span className="terminal-label">terminal</span>
+              <div style={{ marginLeft: "auto", display: "flex", alignItems: "center" }}>
+                <CopyButton getText={() => "npx create-stellar-agentic my-dapp"} />
+              </div>
             </div>
             <div className="terminal-body">
               {terminalScript.slice(0, lineIdx).map((line, i) => (
@@ -259,16 +279,22 @@ export default function Home() {
               <p>Agents write, eval-verify, and iterate. Production dApps with zero manual wiring.</p>
             </div>
           </div>
-          <div className="code-block" style={{ marginTop: "48px" }}>
-            <span className="comment"># Create a new project</span><br />
-            npx create-stellar-agentic my-token-dapp<br /><br />
-            <span className="comment"># Inside the harness, describe your contract</span><br />
-            <span className="keyword">@stellar-contracts</span> create a SAC-compatible token<br />
-            with mint, burn, and transfer operations<br /><br />
-            <span className="comment"># Agent writes the contract, evals verify it</span><br />
-            <span className="ok">ok</span>  Contract compiles<br />
-            <span className="ok">ok</span>  Tests pass<br />
-            <span className="ok">ok</span>  Eval criteria met
+          <div className="code-block-wrapper" style={{ marginTop: "48px" }}>
+            <div className="code-block-bar">
+              <span className="code-block-lang">Shell</span>
+              <CopyButton getText={() => `npx create-stellar-agentic my-token-dapp\n\n@stellar-contracts create a SAC-compatible token\nwith mint, burn, and transfer operations`} />
+            </div>
+            <div className="code-block">
+              <span className="comment"># Create a new project</span><br />
+              npx create-stellar-agentic my-token-dapp<br /><br />
+              <span className="comment"># Inside the harness, describe your contract</span><br />
+              <span className="keyword">@stellar-contracts</span> create a SAC-compatible token<br />
+              with mint, burn, and transfer operations<br /><br />
+              <span className="comment"># Agent writes the contract, evals verify it</span><br />
+              <span className="ok">ok</span>  Contract compiles<br />
+              <span className="ok">ok</span>  Tests pass<br />
+              <span className="ok">ok</span>  Eval criteria met
+            </div>
           </div>
         </div>
       </section>
@@ -282,17 +308,18 @@ export default function Home() {
             <div className="arch-box arch-harness">
               <div className="arch-box-label">Stellar Coding Harness</div>
               <div className="arch-row">
-                <div className="arch-card"><div className="arch-card-title">Skills</div><div className="arch-card-sub">load</div></div>
+                <div className="arch-card"><div className="arch-card-label">01</div><div className="arch-card-title">Skills</div><div className="arch-card-sub">load domain knowledge</div></div>
                 <div className="arch-arrow"><ArrowRight size={14} /></div>
-                <div className="arch-card"><div className="arch-card-title">Agent Router</div><div className="arch-card-sub">route</div></div>
+                <div className="arch-card"><div className="arch-card-label">02</div><div className="arch-card-title">Agent Router</div><div className="arch-card-sub">match &amp; route task</div></div>
                 <div className="arch-arrow"><ArrowRight size={14} /></div>
-                <div className="arch-card"><div className="arch-card-title">Evals</div><div className="arch-card-sub">verify</div></div>
+                <div className="arch-card"><div className="arch-card-label">03</div><div className="arch-card-title">Evals</div><div className="arch-card-sub">verify output</div></div>
               </div>
               <div className="arch-connector-v">
                 <ChevronDown size={14} />
               </div>
               <div className="arch-row arch-single">
                 <div className="arch-card arch-card-green">
+                  <div className="arch-card-label">04</div>
                   <div className="arch-card-title">Knowledge Graph</div>
                   <div className="arch-card-sub">graphify-out/ &mdash; query &middot; path &middot; explain</div>
                 </div>
