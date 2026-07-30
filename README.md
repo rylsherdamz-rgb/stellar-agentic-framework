@@ -29,208 +29,263 @@
 
   <br><br>
 
-  <p><b>Build Stellar dApps with AI agents that write, verify, and deploy code — no context-switching.</b><br>
+  <p><b>AI orchestration + project scaffolding for Stellar dApps.</b><br>
+  Six specialist agents write, verify, and deploy contracts, frontends, and payment APIs — no context-switching.<br>
   <a href="https://stellar-agentic-framework.vercel.app" style="color:#7c3aed;text-decoration:none;">stellar-agentic-framework.vercel.app</a></p>
 
   <table>
     <tr>
-      <td align="center"><b>🧠 Agentic Skill</b><br><sub>6 AI agents for contracts, frontend,<br>backend, payments, ops, ZK</sub></td>
+      <td align="center"><b>🧠 Agent Skill</b><br><sub>For Claude Code / OpenCode — 6 agents<br>that build your dApp from one prompt</sub></td>
       <td width="30"></td>
-      <td align="center"><b>📦 Scaffold CLI</b><br><sub><code>npx create-stellar-agentic</code><br>Full dApp in one command</sub></td>
+      <td align="center"><b>📦 Scaffold CLI</b><br><sub><code>npx create-stellar-agentic</code><br>Production monorepo in one command</sub></td>
     </tr>
   </table>
 </div>
 
 ---
 
-## Table of Contents
+## What Is This?
 
-- [The Problem](#the-problem)
-- [How It Works](#how-it-works)
-- [Option A: Claude Code Skill](#option-a-claude-code-skill)
-- [Option B: Scaffold CLI](#option-b-scaffold-cli)
-- [Contract Deployment](#contract-deployment)
-- [Configuration](#configuration)
-- [Architecture](#architecture)
-- [FAQ](#faq)
+The Stellar Agentic Framework is **two things that work together**:
 
----
+1. **An AI orchestration layer** (the "Skill") — a set of six specialist agent definitions + a graph engine kernel (`CLAUDE.md`) that routes your requests to the right agents, verifies their output against structured evals, and steers on failure. It runs inside Claude Code or OpenCode.
 
-## The Problem
+2. **A project scaffold CLI** (`create-stellar-agentic`) — generates a production-ready Stellar monorepo with contracts, frontend, backend, CI/CD, and agent files pre-configured. If you use Claude Code, it auto-installs the Skill too.
 
-Building a Stellar dApp means juggling:
-
-- Rust smart contracts (soroban-sdk) with auth, events, TTL
-- A React frontend with wallet connection, signing, transaction UX
-- An API server with x402/MPP payment middleware
-- CI/CD, deployment, testnet funding
-- Zero-knowledge proof integration
-
-Each piece requires different tools, different mental models, and constant context-switching. Most projects never ship because the gap between "contract compiles" and "app works" is huge.
-
-**This framework closes that gap.** It gives AI agents the structured context they need to build, test, and deploy every layer of a Stellar dApp — and verifies the output against defined evals before declaring it done.
+**The CLI bootstraps the project. The Skill builds it.** You can use either independently — together they're a complete workflow.
 
 ---
 
-## How It Works
+## Who Is This For?
+
+| You are... | Use the... |
+|---|---|
+| A Stellar developer who uses Claude Code | Skill — adds 6 agents to your sessions |
+| Starting a new Soroban dApp from scratch | CLI — scaffolds a monorepo with everything wired |
+| Building a paid API with x402/MPP | Both — CLI for structure, Skill for implementation |
+| A hackathon participant shipping fast | Both — one command to scaffold, one prompt to build |
+| Already have a project, want AI assistance | Skill — drops into any existing repo |
+| Evaluating Stellar without Claude Code | CLI — standalone scaffold, no AI required |
+
+---
+
+## Why Not Just Use ChatGPT / Copilot / Cursor?
+
+Generic AI tools don't know Stellar. They don't know that:
+- Contracts must be `#![no_std]` with `soroban-sdk`
+- Wallet connection requires Stellar Wallets Kit (not wagmi)
+- x402 payments need OZ Channels facilitator + CAIP-2 network IDs
+- The correct curve for on-chain ZK verification is BLS12-381, not BN254
+
+This framework **embeds that domain knowledge** into 10 installable skills, 6 agent definitions, and 5 eval files. Every agent checks its output against structured pass/fail criteria before handing off. It's not a chat — it's a multi-agent graph engine with domain expertise.
+
+---
+
+## Architecture
 
 ```
-You describe what you want
-        │
-        ▼
-  Kernel (CLAUDE.md) parses intent
-        │
-        ├── @stellar-contracts  ─── Rust + soroban-sdk
-        ├── @stellar-frontend   ─── Next.js + Wallets Kit
-        ├── @stellar-backend    ─── Express + RPC
-        ├── @stellar-payments   ─── x402 + MPP
-        ├── @stellar-ops        ─── CI/CD + deploy
-        └── @stellar-zk         ─── Groth16 + Noir
-        │
-        ▼
-  Each agent gets relevant skills + eval criteria
-        │
-        ▼
-  Output verified against evals (max 3 retries)
-        │
-        ▼
-  E2E test + deploy → report
+stellar-agentic-framework/
+├── SKILL.md          # Entry point — loads the graph engine
+├── CLAUDE.md         # Graph engine kernel — routes tasks as work graphs
+│
+├── agents/           # 6 agent definitions (node prompts)
+│   ├── stellar-contracts.md
+│   ├── stellar-frontend.md
+│   ├── stellar-backend.md
+│   ├── stellar-payments.md
+│   ├── stellar-ops.md
+│   └── stellar-zk.md
+│
+├── skills/           # Domain knowledge (loaded on demand)
+│   ├── smart-contracts/   →  soroban-sdk, WASM, storage, auth, testing
+│   ├── dapp/              →  Wallets Kit, tx building, React hooks
+│   ├── data/              →  RPC + Horizon, event queries
+│   ├── assets/            →  SAC, trustlines, classic tokens
+│   ├── agentic-payments/  →  x402, MPP Charge/Channel
+│   ├── standards/         →  SEPs, CAPs, ecosystem
+│   ├── zk-proofs/         →  Groth16, BLS12-381, Circom/Noir
+│   ├── stellar-mcp/       →  MCP server tools
+│   ├── frontend-design/   →  dApp UI patterns
+│   └── graphify/          →  Knowledge graphs
+│
+├── evals/            # Pass/fail criteria per component
+│   ├── 01-contract-eval.md
+│   ├── 02-frontend-eval.md
+│   └── ...
+│
+├── templates/        # Source templates for CLI scaffold
+│   ├── contracts/
+│   ├── frontend/
+│   ├── backend/
+│   └── cicd/
+│
+├── packages/create-stellar-agentic/  # npm-published CLI
+└── .claude/commands/  # Slash commands
 ```
 
-The kernel never writes code. It routes, verifies, and steers. Six specialist agents do the work, each loaded with the skills and evals for their domain — plus 10 bundled knowledge skills (smart-contracts, dapp, data, assets, payments, standards, zk, mcp, frontend-design, graphify).
+### How the Pieces Connect
+
+```
+You (prompt)
+   │
+   ▼
+Graph Engine (CLAUDE.md)
+   │  Parses intent, generates a work graph
+   │
+   ├──────────────────┬──────────────────┐
+   │                  │                  │
+   ▼                  ▼                  ▼
+Agent Node 1      Agent Node 2      Agent Node 3
+(contracts)       (frontend)        (backend)
+   │                  │                  │
+   ▼                  ▼                  ▼
+Verifier (eval)   Verifier (eval)   Verifier (eval)
+   │                  │                  │
+   └──────────────────┼──────────────────┘
+                      ▼
+               Synthesize → Report
+```
 
 ---
 
-## Option A: Agent Skill
+## The Kernel
 
-Use this if you work in Claude Code and want AI-assisted development.
+The kernel (`CLAUDE.md`) is the graph engine. It is **not a runtime** — it is a structured prompt that tells the AI how to organize its own work. It defines:
 
-### Install
+- **Org graph** — 6 agent nodes with zone ownership and persistent context
+- **Work graph generation** — how to wire agents together per task (sequential, parallel, conditional, fan-out, fan-in)
+- **Node execution contract** — what the kernel passes to each agent (intent + context + tools) and what it expects back (output + state delta + verifier result)
+- **Edge definitions** — what data flows between nodes (contract IDs, ABI, payment middleware config, API endpoints)
+- **Failure recovery** — retry same node → reroute to fallback → escalate
+
+Each task gets a dynamically-generated work graph. For `"Build a token contract with a React frontend"`, the graph is:
+
+```
+[contracts] ──(contract_id)──→ [frontend]
+     ↓                              ↓
+  verifier                       verifier
+  (pass)                         (pass) → [kernel: synthesize]
+```
+
+---
+
+## The 6 Agents
+
+These are **prompt-based agent definitions** in `agents/*.md`. Each is a structured instruction set (not a running process) that tells the AI which zone it owns, what data it needs, what tools it can use, and what constraints apply.
+
+| Agent | Zone | Input Edge | Output Edge |
+|---|---|---|---|
+| `@stellar-contracts` | Rust smart contracts, WASM, testnet deploy | @stellar-zk (verifier WASM) | → @stellar-frontend (contract IDs) |
+| `@stellar-frontend` | Next.js 15, Wallets Kit, transaction UX | @stellar-contracts (contract IDs) | → @stellar-backend (API needs) |
+| `@stellar-backend` | Express, RPC, event indexers | @stellar-frontend (API shapes), @stellar-payments (middleware) | → @stellar-ops (Dockerfile) |
+| `@stellar-payments` | x402, MPP Charge/Channel, USDC | @stellar-contracts (token addresses) | → @stellar-backend (middleware code) |
+| `@stellar-ops` | CI/CD, Docker, GitHub Actions | All nodes (build artifacts) | → deploy targets |
+| `@stellar-zk` | Groth16 verifiers, Circom, Noir | — | → @stellar-contracts (verifier contract) |
+
+You can customize, add, or remove agents — each is just a markdown file in `agents/`. Register new agents in the `CLAUDE.md` org graph table.
+
+---
+
+## Installation
+
+### Which One?
+
+| I want to... | Install this |
+|---|---|
+| Add AI orchestration to an existing Stellar project | **Skill** → `npx skills add rylsherdamz-rgb/stellar-agentic-framework` |
+| Scaffold a brand-new Stellar dApp monorepo | **CLI** → `npx create-stellar-agentic my-dapp` |
+| Build a dApp with AI assistance (recommended) | **Both** — CLI scaffolds the project, Skill builds it |
+| Use AI agents without Claude Code | **CLI only** — standalone scaffolding, no AI required |
+
+### Skill (AI Orchestration)
 
 ```bash
-# Agent Skill
-npx skills add rylsherdamz-rgb/stellar-agentic-framework 
+# For Claude Code or OpenCode
+npx skills add rylsherdamz-rgb/stellar-agentic-framework
 
-#Claude Code
+# Specify the agent
 npx skills add rylsherdamz-rgb/stellar-agentic-framework --agent claude-code
-
-# OpenCode
 npx skills add rylsherdamz-rgb/stellar-agentic-framework --agent opencode
-
-# Or install from the plugin marketplace (Claude Code only)
-/plugin marketplace add rylsherdamz-rgb/stellar-agentic-framework
 ```
 
-Then in any session:
+After installing, start a session and prompt:
 
-> _"Build a token contract with a React frontend and x402 payments"_
+> *"Build a token contract with a React frontend and x402 payments"*
 
-### What Happens
+The graph engine routes to the relevant agents, each with domain skills and evals loaded. Outputs are verified against pass/fail criteria, with up to 3 retries on failure.
 
-The kernel spawns up to 6 agents in parallel, each with specialized skills and eval criteria. Every output is checked — if it fails, the agent retries with corrective context (max 3 attempts). After all agents pass, the framework runs e2e tests and reports pass/fail per component.
+### CLI (Project Scaffold)
 
-### Agents
+```bash
+npx create-stellar-agentic my-dapp
+```
 
-| Agent | Role | Loaded Skills |
-|-------|------|---------------|
-| `@stellar-contracts` | Rust smart contracts (soroban-sdk) | contracts + assets + zk |
-| `@stellar-frontend` | Next.js + Wallets Kit + Tailwind | dapp + data + frontend-design |
-| `@stellar-backend` | Express + RPC services | data + agentic-payments |
-| `@stellar-payments` | x402 + MPP payment flows | agentic-payments + assets |
-| `@stellar-ops` | CI/CD + Docker + deploy | — |
-| `@stellar-zk` | Groth16 + Circom + Noir | zk-proofs |
+This generates a production-ready monorepo:
+
+```
+my-dapp/
+├── contracts/          # Rust smart contracts (hello-world + SEP-41 token)
+├── frontend/           # Next.js 15 + Wallets Kit + hooks + components
+├── backend/            # Express + RPC + x402/MPP payment middleware
+├── .github/workflows/  # CI/CD for contracts, frontend, backend
+├── scripts/            # deploy-contract.sh (test gate → deploy → record)
+├── agents/             # 6 agent definitions (works with Claude Code)
+├── evals/              # Eval criteria per component
+├── CLAUDE.md           # Graph engine kernel
+└── SKILL.md            # Orchestration entry point
+```
+
+**Killer feature: the CLI automatically installs the Skill.** When you run `npx create-stellar-agentic`, it copies all 10 skills to `~/.claude/skills/` and sets up the `CLAUDE.md` kernel. Opening the generated project in Claude Code instantly activates the full multi-agent harness — no extra steps.
+
+### CLI Options
+
+| Flag | Description |
+|---|---|
+| `--yes` / `-y` | Skip all prompts |
+| `--template <type>` | `full` (default), `contract-only`, `frontend-only`, `backend-only`, `payment-only` |
+| `--skill-only <dir>` | Install only skill files into an existing project |
+| `--no-install` | Skip npm install after scaffold |
+
+---
+
+## Features
 
 ### Agentic Kit Hooks (no raw RPC)
 
 | Hook | Import | Use |
-|------|--------|-----|
+|---|---|---|
 | `useStellarData()` | `@/hooks/use-stellar-data` | Balances, contract queries, events, transactions |
 | `useContract(id)` | `@/hooks/use-contract` | `read()` (simulation) / `write()` (sign+submit) |
 | `useStellarWallet()` | `@/hooks/use-stellar-wallet` | Connect, disconnect, sign, getBalances |
 | `useWallet()` | `@/providers/wallet-provider` | Context wrapper |
 
-### MCP Integrations (auto-configured)
+### Eval-Driven Pipeline
 
-| Server | Tools | Use For |
-|--------|-------|---------|
-| stellar-rpc | `get_account`, `get_contract_data`, `simulate_transaction` | Debugging, verification |
-| filesystem | `read_file`, `write_file`, `list_directory` | Project access |
-| github | `create_or_update_file`, `search_repos`, `create_pull_request` | Repo management |
-| playwright | `browser_navigate`, `browser_click`, `browser_screenshot` | E2E testing |
+Each agent's output is checked against structured pass/fail criteria. If it fails, the kernel feeds the failure details back as corrective context (max 3 retries).
 
-### Eval Criteria
-
-| Eval | What It Checks |
-|------|----------------|
-| 01-contract | Compiles to WASM, tests pass, auth on privileged fns, TTL on writes, deploy gate |
+| Eval | Checks |
+|---|---|
+| 01-contract | WASM compiles, tests pass, auth on privileged fns, TTL on writes, deploy gate |
 | 02-frontend | TypeScript compiles, wallet connect/disconnect, contract read/write, no raw RPC |
 | 03-backend | Server starts, balance + contract endpoints, CORS |
 | 04-payment | x402 rejects unpaid with 402, accepts valid payment |
 | 05-framework | All agents produced output, all evals ran, graphify completed |
 
----
+### MCP Integrations
 
-## Option B: Scaffold CLI
+| Server | Tools |
+|---|---|
+| stellar-rpc | `get_account`, `get_contract_data`, `simulate_transaction` |
+| filesystem | `read_file`, `write_file`, `list_directory` |
+| github | `create_or_update_file`, `search_repos`, `create_pull_request` |
+| playwright | `browser_navigate`, `browser_click`, `browser_screenshot` |
 
-Use this to generate a complete Stellar dApp project without Claude Code.
+### Contract Deployment
 
-### Install
+Test-gated deployment — `cargo test` must pass or the deploy aborts.
 
-```bash
-npx create-stellar-agentic my-dapp --yes
-```
-
-Or install globally:
-
-```bash
-npm install -g create-stellar-agentic
-stellar-agentic my-dapp --yes
-```
-
-### What You Get
-
-```
-my-dapp/
-├── contracts/          # Rust smart contracts (hello-world + SEP-41 token)
-├── frontend/           # Next.js 15 + Tailwind + Wallets Kit
-│   ├── hooks/          #   Agentic kit hooks (useStellarData, useContract, useWallet)
-│   ├── components/     #   ConnectButton, InvokeContract, SendPayment
-│   ├── providers/      #   WalletProvider context
-│   └── examples/       #   Dashboard, BalanceViewer, EventList
-├── backend/            # Express + x402/MPP payments
-├── .github/workflows/  # CI/CD (contract test, frontend deploy, backend deploy, e2e)
-├── scripts/            # deploy-contract.sh (test gate → deploy → record)
-├── agents/             # 6 specialist agents (for Claude Code)
-├── evals/              # Eval criteria per component
-├── CLAUDE.md           # Harness kernel
-└── SKILL.md            # Orchestration skill
-```
-
-If you do use Claude Code, pointing it at this project activates the full multi-agent harness automatically — the CLI installs all skill dependencies to `~/.claude/skills/`.
-
-### CLI Options
-
-| Flag | Description |
-|------|-------------|
-| `--yes` / `-y` | Skip all prompts |
-| `--template <type>` | `full` (default), `contract-only`, `frontend-only`, `backend-only`, `payment-only` |
-| `--skill-only <dir>` | Install only the skill files into an existing project |
-| `--no-install` | Skip npm install after scaffold |
-
----
-
-## Contract Deployment
-
-Deployment requires passing the test gate first — `cargo test` must succeed or the deploy aborts.
-
-**First deploy** on a network (no existing `data/deployments/<network>.json`): deploys silently, records contract IDs, updates `.env`.
-
-**Subsequent deploys**: prompts for confirmation before proceeding.
-
-| File | Purpose |
-|------|---------|
-| `data/deployments/<network>.json` | Contract ID, WASM hash, timestamp |
-| `.env` | `NEXT_PUBLIC_<NAME>_CONTRACT_ID` |
+- **First deploy** on a network: auto-deploys, records to `data/deployments/`, updates `.env`
+- **Subsequent deploys**: prompts for confirmation
 
 ---
 
@@ -239,87 +294,32 @@ Deployment requires passing the test gate first — `cargo test` must succeed or
 ### Environment Variables
 
 | Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
+|---|---|---|---|
 | `STELLAR_RPC_URL` | No | `https://soroban-testnet.stellar.org` | RPC endpoint |
 | `STELLAR_NETWORK_PASSPHRASE` | No | `Test SDF Network ; September 2015` | Network passphrase |
 | `STELLAR_SECRET_KEY` | For deploy | — | Deployer account secret |
 | `STELLAR_DEPLOYER` | For deploy | `deployer` | Stellar CLI source account |
-| `NEXT_PUBLIC_<NAME>_CONTRACT_ID` | After deploy | — | Auto-populated by deploy script |
 | `OZ_CHANNEL_ID` | For x402 | — | OZ Channels facilitator ID |
 | `OZ_API_KEY` | For x402 | — | OZ Channels API key |
-
-### MCP Configuration (`.mcp.json`)
-
-```json
-{
-  "mcpServers": {
-    "stellar-rpc": {
-      "command": "npx",
-      "args": ["@stellar/mcp-server"],
-      "env": {
-        "STELLAR_RPC_URL": "https://soroban-testnet.stellar.org",
-        "STELLAR_NETWORK_PASSPHRASE": "Test SDF Network ; September 2015"
-      }
-    }
-  }
-}
-```
-
----
-
-## Architecture
-
-```
-stellar-agentic-framework/
-├── SKILL.md             # Orchestration skill
-├── CLAUDE.md            # Harness kernel — identity, routing, Skill Boot
-├── agents/              # 6 specialist agent definitions
-├── skills/              # 10 bundled skills (auto-installed to ~/.claude/skills/)
-│   ├── smart-contracts/ #   Rust + soroban-sdk contract dev
-│   ├── dapp/            #   Frontend hooks + examples
-│   ├── data/            #   RPC + Horizon queries
-│   ├── assets/          #   Classic assets + SAC bridge
-│   ├── agentic-payments/#   x402 + MPP
-│   ├── standards/       #   SEPs + CAPs
-│   ├── zk-proofs/       #   Groth16 + Circom + Noir
-│   ├── stellar-mcp/     #   MCP tools guide
-│   ├── frontend-design/ #   Tailwind CSS dApp UI patterns
-│   └── graphify/        #   Knowledge graphs
-├── templates/           # Source code for CLI scaffold
-│   ├── contracts/       #   hello-world + SEP-41 token
-│   ├── frontend/        #   Next.js + hooks + components
-│   ├── backend/         #   Express + RPC + x402
-│   └── cicd/            #   GitHub Actions workflows
-├── evals/               # 5 eval criteria files
-├── data/                # Persistent project memory
-├── scripts/             # deploy-contract.sh
-├── packages/create-stellar-agentic/  # Published to npm
-├── .claude/commands/    # 4 slash commands (scaffold, deploy, test-e2e, graphify)
-├── .claude-plugin/      # Claude Code plugin manifest
-└── skill.json           # Skills Directory manifest
-```
 
 ---
 
 ## FAQ
 
-**Do I need both the skill and the CLI?**  
-No. The skill is for Claude Code users; the CLI scaffolds projects standalone. The CLI auto-installs the skill if you use Claude Code.
-
 **Can I use this without Claude Code?**  
-Yes. `npx create-stellar-agentic` works standalone. The harness kernel only activates in Claude Code sessions.
+Yes. `npx create-stellar-agentic` works standalone. The graph engine only activates in Claude Code sessions.
 
 **What networks are supported?**  
-Testnet (default), mainnet, and local/testcontainer. All configs default to testnet — mainnet requires explicit env opt-in.
+Testnet (default), mainnet, and local/testcontainer. Mainnet requires explicit env opt-in.
 
 **How do eval retries work?**  
 Each agent gets max 3 attempts. On failure, the kernel feeds the eval failure details back as corrective context for the retry.
 
 **How do I add my own agent?**  
-Create an agent file in `agents/`, register it in `CLAUDE.md`, and add its eval to `evals/`.
+Create an agent file in `agents/`, register it in `CLAUDE.md`'s org graph table, and add its eval to `evals/`.
 
 **My contracts don't compile — what SDK version?**  
-The template contracts target `soroban-sdk = "27.0.0-rc.1"`. Run `cargo update` if you need a newer patch.
+Template contracts target `soroban-sdk = "27.0.0-rc.1"`. Run `cargo update` for a newer patch.
 
 ---
 
