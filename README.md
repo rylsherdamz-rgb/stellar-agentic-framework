@@ -68,6 +68,9 @@ Scaffolds a full project with contracts, Next.js frontend (+ Tailwind + Wallets 
 # From the skills registry (recommended)
 npx skills add rylsherdamz-rgb/stellar-agentic-framework --agent claude-code
 
+# From the Claude Code plugin marketplace
+/plugin marketplace add rylsherdamz-rgb/stellar-agentic-framework
+
 # From a local clone
 git clone https://github.com/rylsherdamz-rgb/stellar-agentic-framework.git
 cd stellar-agentic-framework
