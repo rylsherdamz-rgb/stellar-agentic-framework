@@ -20,7 +20,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: https://registry.npmjs.org
 
       - name: Prepare package files
         run: |
@@ -29,9 +28,11 @@ jobs:
           done
           cp SKILL.md CLAUDE.md README.md .env.example .mcp.json packages/create-stellar-agentic/
 
-      - name: Publish to npmjs.org
+      - name: Publish to npmjs.org (OIDC provenance)
         run: npm publish --provenance --access public
         working-directory: packages/create-stellar-agentic
+        env:
+          NODE_AUTH_TOKEN: ""
 
       - name: Publish to GitHub Packages
         run: |
