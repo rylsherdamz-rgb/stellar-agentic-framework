@@ -15,7 +15,6 @@ jobs:
     permissions:
       contents: read
       id-token: write
-      packages: write
 
     steps:
       - uses: actions/checkout@v4
@@ -51,15 +50,4 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish to GitHub Packages
-        run: |
-          cd packages/create-stellar-agentic
-          node -e "
-            const fs = require('fs');
-            const p = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
-            p.name = '@rylsherdamz-rgb/create-stellar-agentic';
-            fs.writeFileSync('package.json', JSON.stringify(p, null, 2) + '\n');
-            const npmrc = 'registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}\n';
-            fs.writeFileSync('.npmrc', npmrc);
-          "
-          npm publish
+
