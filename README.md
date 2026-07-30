@@ -99,7 +99,10 @@ Use this if you work in Claude Code and want AI-assisted development.
 ### Install
 
 ```bash
-# Claude Code
+# Agent Skill
+npx skills add rylsherdamz-rgb/stellar-agentic-framework 
+
+#Claude Code
 npx skills add rylsherdamz-rgb/stellar-agentic-framework --agent claude-code
 
 # OpenCode
