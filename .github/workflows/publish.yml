@@ -7,11 +7,12 @@ on:
 
 jobs:
   publish-cli:
-    name: Publish create-stellar-agentic to npm
+    name: Publish create-stellar-agentic
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
+      packages: write
 
     steps:
       - uses: actions/checkout@v4
@@ -28,6 +29,19 @@ jobs:
           done
           cp SKILL.md CLAUDE.md README.md .env.example .mcp.json packages/create-stellar-agentic/
 
-      - name: Publish to npm
+      - name: Publish to npmjs.org
         run: npm publish --provenance --access public
         working-directory: packages/create-stellar-agentic
+
+      - name: Publish to GitHub Packages
+        run: |
+          cd packages/create-stellar-agentic
+          node << 'EOF'
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+            pkg.name = '@rylsherdamz-rgb/create-stellar-agentic';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          EOF
+          npm publish --registry=https://npm.pkg.github.com
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
