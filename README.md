@@ -25,7 +25,7 @@
 
   <table>
     <tr>
-      <td align="center"><b>🧠 Claude Code Skill</b><br><sub>6 AI agents for contracts, frontend,<br>backend, payments, ops, ZK</sub></td>
+      <td align="center"><b>🧠 Agentic Skill</b><br><sub>6 AI agents for contracts, frontend,<br>backend, payments, ops, ZK</sub></td>
       <td width="30"></td>
       <td align="center"><b>📦 Scaffold CLI</b><br><sub><code>npx create-stellar-agentic</code><br>Full dApp in one command</sub></td>
     </tr>
