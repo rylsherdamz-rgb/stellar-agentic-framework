@@ -1,6 +1,6 @@
 {
   "name": "create-stellar-agentic",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Scaffold a Stellar dApp with the Stellar Agentic Framework — contracts, frontend, backend, and agentic payments in one command",
   "type": "module",
   "bin": {

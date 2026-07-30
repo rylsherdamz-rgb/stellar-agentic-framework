@@ -55,10 +55,11 @@ jobs:
         run: |
           cd packages/create-stellar-agentic
           node -e "
-            const p = require('./package.json');
+            const fs = require('fs');
+            const p = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
             p.name = '@rylsherdamz-rgb/create-stellar-agentic';
-            require('fs').writeFileSync('package.json', JSON.stringify(p, null, 2) + '\n');
+            fs.writeFileSync('package.json', JSON.stringify(p, null, 2) + '\n');
+            const npmrc = 'registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}\n';
+            fs.writeFileSync('.npmrc', npmrc);
           "
-          npm config set registry https://npm.pkg.github.com
-          npm config set //npm.pkg.github.com/:_authToken ${{ secrets.GITHUB_TOKEN }}
           npm publish
