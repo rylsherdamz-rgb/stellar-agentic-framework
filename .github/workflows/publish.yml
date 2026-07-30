@@ -17,7 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js (no registry auth)
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
@@ -28,21 +29,21 @@ jobs:
           done
           cp SKILL.md CLAUDE.md README.md .env.example .mcp.json packages/create-stellar-agentic/
 
-      - name: Publish to npmjs.org (OIDC provenance)
-        run: npm publish --provenance --access public
+      - name: Publish to npmjs.org via OIDC
+        run: |
+          unset NODE_AUTH_TOKEN
+          npm publish --provenance --access public
         working-directory: packages/create-stellar-agentic
-        env:
-          NODE_AUTH_TOKEN: ""
 
       - name: Publish to GitHub Packages
         run: |
           cd packages/create-stellar-agentic
-          node << 'EOF'
-            const fs = require('fs');
-            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+          node -e "
+            const p = require('fs');
+            const pkg = JSON.parse(p.readFileSync('package.json','utf-8'));
             pkg.name = '@rylsherdamz-rgb/create-stellar-agentic';
-            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
-          EOF
+            p.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
           npm publish --registry=https://npm.pkg.github.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
