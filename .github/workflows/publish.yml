@@ -58,10 +58,6 @@ jobs:
             pkg.name = '@rylsherdamz-rgb/create-stellar-agentic';
             fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
           EOF
-
-          cat > .npmrc << 'NPMRC'
-          @rylsherdamz-rgb:registry=https://npm.pkg.github.com
-          //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
-          NPMRC
-
-          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} npm publish
+          echo "@rylsherdamz-rgb:registry=https://npm.pkg.github.com" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
+          npm publish
