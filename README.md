@@ -23,6 +23,9 @@
   <a href="https://stellar-agentic-framework.vercel.app">
     <img src="https://img.shields.io/badge/website-7B3FE4?logo=vercel&logoColor=white&label=docs">
   </a>
+  <a href="https://x.com/ChichiCode0/status/2084510317862895653">
+    <img src="https://img.shields.io/badge/watch--promo-7B3FE4?logo=x&logoColor=white&label=60s">
+  </a>
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-green">
   </a>
@@ -31,7 +34,7 @@
 
   <p><b>AI orchestration + project scaffolding for Stellar dApps.</b><br>
   Six specialist agents write, verify, and deploy contracts, frontends, and payment APIs — no context-switching.<br>
-  <a href="https://stellar-agentic-framework.vercel.app" style="color:#7c3aed;text-decoration:none;">stellar-agentic-framework.vercel.app</a></p>
+  <a href="https://stellar-agentic-framework.vercel.app" style="color:#7c3aed;text-decoration:none;">stellar-agentic-framework.vercel.app</a> · <a href="https://x.com/ChichiCode0/status/2084510317862895653" style="color:#7c3aed;text-decoration:none;">▶ Watch the 60s promo</a></p>
 
   <table>
     <tr>
@@ -40,6 +43,12 @@
       <td align="center"><b>📦 Scaffold CLI</b><br><sub><code>npx create-stellar-agentic</code><br>Production monorepo in one command</sub></td>
     </tr>
   </table>
+
+  <br>
+
+  <video width="840" controls muted playsinline preload="metadata" poster="https://stellar-agentic-framework.vercel.app/promo-poster.png" style="max-width:100%;border-radius:14px;border:1px solid #1c1c2e;box-shadow:0 24px 80px rgba(0,0,0,.5)">
+    <source src="https://github.com/rylsherdamz-rgb/stellar-agentic-framework/raw/master/media/promo.mp4" type="video/mp4">
+  </video>
 </div>
 
 ---

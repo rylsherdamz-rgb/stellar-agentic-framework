@@ -44,7 +44,7 @@ async function synthesize(text, outFile) {
     body: JSON.stringify({
       text,
       model_id: MODEL_ID,
-      voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.3 },
+      voice_settings: { stability: 0.85, similarity_boost: 0.85, style: 0.05 },
     }),
   });
   if (!res.ok) {

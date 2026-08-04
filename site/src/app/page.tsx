@@ -154,6 +154,13 @@ export default function Home() {
                 Scaffold Project
               </CopyButton>
             </div>
+            <div className="hero-cta-group">
+              <span className="hero-cta-label">See it in action</span>
+              <a href="https://x.com/ChichiCode0/status/2084510317862895653" target="_blank" rel="noreferrer" className="btn btn-secondary btn-copy">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3" /></svg>
+                Watch promo (60s)
+              </a>
+            </div>
           </div>
           <div className="hero-mini-term">
             <div className="bar">
@@ -162,6 +169,19 @@ export default function Home() {
             <div className="body">
               Graph engine routes task to <span>@stellar-contracts</span> → <span>@stellar-frontend</span> → <span>@stellar-backend</span> — each verified against evals, max 3 retries.
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="promo" className="section-alt">
+        <div className="container">
+          <span className="section-label">Promo</span>
+          <h2 className="section-title">Watch it in action</h2>
+          <p className="section-sub">60 seconds of contracts, terminals, and a graph engine wiring six agents.</p>
+          <div className="promo-frame">
+            <video controls muted playsInline preload="none" poster="/promo-poster.png">
+              <source src="/promo.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
       </section>
